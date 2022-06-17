@@ -1,6 +1,9 @@
 # The directory Mix will write compiled artifacts to.
 /_build/
 
+# the directory Sqlite3 will write its database to.
+/db/
+
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
 

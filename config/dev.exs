@@ -2,10 +2,7 @@ import Config
 
 # Configure your database
 config :what_where_when, WhatWhereWhen.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "what_where_when_dev",
+  database: "db/what_where_when_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
