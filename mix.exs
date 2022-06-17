@@ -33,22 +33,32 @@ defmodule WhatWhereWhen.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      # framework and view layers
+      {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
       {:phoenix, "~> 1.6.10"},
-      {:phoenix_ecto, "~> 4.4"},
+      {:phoenix_html, "~> 3.0"},
+      {:phoenix_live_view, "~> 0.17.5"},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
+
+      # api layer
+      {:jason, "~> 1.2"}, # for JSON parsing in Phoenix
+      {:plug_cowboy, "~> 2.5"},
+
+      # db/data layer
       {:ecto_sql, "~> 3.6"},
       {:ecto_sqlite3, "~> 0.7.5"},
-      {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.17.5"},
+      {:phoenix_ecto, "~> 4.4"},
+
+      # testing layer
       {:floki, ">= 0.30.0", only: :test},
-      {:phoenix_live_dashboard, "~> 0.6"},
-      {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
+
+      # operations/monitoring layer
+      {:phoenix_live_dashboard, "~> 0.6", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
-      {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
 
-      # {:swoosh, "~> 1.3"},
+      # disabled, kept for discoverability
+      # {:swoosh, "~> 1.3"}, # for sending emails
     ]
   end
 
