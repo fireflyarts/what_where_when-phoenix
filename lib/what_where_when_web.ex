@@ -22,7 +22,6 @@ defmodule WhatWhereWhenWeb do
       use Phoenix.Controller, namespace: WhatWhereWhenWeb
 
       import Plug.Conn
-      import WhatWhereWhenWeb.Gettext
       alias WhatWhereWhenWeb.Router.Helpers, as: Routes
     end
   end
@@ -80,7 +79,6 @@ defmodule WhatWhereWhenWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import WhatWhereWhenWeb.Gettext
     end
   end
 
@@ -96,7 +94,6 @@ defmodule WhatWhereWhenWeb do
       import Phoenix.View
 
       import WhatWhereWhenWeb.ErrorHelpers
-      import WhatWhereWhenWeb.Gettext
       alias WhatWhereWhenWeb.Router.Helpers, as: Routes
     end
   end

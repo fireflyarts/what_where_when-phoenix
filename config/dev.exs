@@ -55,7 +55,6 @@ config :what_where_when, WhatWhereWhenWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"priv/gettext/.*(po)$",
       ~r"lib/what_where_when_web/(live|views)/.*(ex)$",
       ~r"lib/what_where_when_web/templates/.*(eex)$"
     ]
