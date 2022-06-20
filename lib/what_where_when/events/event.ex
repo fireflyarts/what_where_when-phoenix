@@ -130,3 +130,35 @@ defmodule WhatWhereWhen.Events.Event do
     Repo.one!(from c in Category, where: c.id == ^category_id, select: {c.name, c.minimum_age})
   end
 end
+
+# error map
+#----
+# cond do
+#   cs.action == :insert ->
+#     add_error(
+#       cs,
+#       :minimum_age,
+#       "Cannot create a less-restricted event (#{age}+) in category \"#{cat_name}\, because it's [#{cat_age}+]\". Please restrict more or move to different category."
+#   )
+
+#   new_cat_id && new_age ->
+#     add_error(
+#       cs,
+#       :minimum_age,
+#       "Event was moved to category \"#{cat_name}\ [#{cat_age}+]\", while age requirenment was changed to #{new_age}. Alas, category requires at least #{cat_age}. Please resolve."
+#     )
+
+#   new_cat_id ->
+#     add_error(
+#       cs,
+#       :minimum_age,
+#       "Event was moved to category \"#{cat_name}\" (which is [#{cat_age}+]), but the event's minimum age is still #{age}. Please raise age or pick a different category!"
+#     )
+
+#   new_age ->
+#     add_error(
+#       cs,
+#       :minimum_age,
+#       "Event age requirenment was changed to #{new_age}, but the containing category (\"#{cat_name}\") is [#{cat_age}+]. Please move to a more age-permissive category!"
+#     )
+# end
