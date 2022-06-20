@@ -41,7 +41,8 @@ defmodule WhatWhereWhen.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
 
       # api layer
-      {:jason, "~> 1.2"}, # for JSON parsing in Phoenix
+      # for JSON parsing in Phoenix
+      {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
 
       # db/data layer
@@ -49,13 +50,16 @@ defmodule WhatWhereWhen.MixProject do
       {:ecto_sqlite3, "~> 0.7.5"},
       {:phoenix_ecto, "~> 4.4"},
 
+      # encoding
+      {:emojix, "~> 0.3.0"},
+
       # testing layer
       {:floki, ">= 0.30.0", only: :test},
 
       # operations/monitoring layer
       {:phoenix_live_dashboard, "~> 0.6", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
-      {:telemetry_poller, "~> 1.0"},
+      {:telemetry_poller, "~> 1.0"}
 
       # disabled, kept for discoverability
       # {:swoosh, "~> 1.3"}, # for sending emails
