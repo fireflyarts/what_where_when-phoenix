@@ -10,6 +10,7 @@ defmodule WhatWhereWhen.ThemeCamps.Camp do
     field :name, :string
 
     belongs_to :primary_contact, Person
+    has_many :members, Person
   end
 
   @doc false

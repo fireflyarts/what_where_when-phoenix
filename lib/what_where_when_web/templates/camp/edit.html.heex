@@ -1,0 +1,5 @@
+<h1>Edit Camp</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.camp_path(@conn, :update, @camp)) %>
+
+<span><%= link "Back", to: Routes.camp_path(@conn, :index) %></span>

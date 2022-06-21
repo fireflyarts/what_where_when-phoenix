@@ -238,7 +238,9 @@ defmodule WhatWhereWhen.People do
   """
   def get_person_by_session_token(token) do
     {:ok, query} = PersonToken.verify_session_token_query(token)
+
     Repo.one(query)
+    |> Repo.preload(:camp)
   end
 
   @doc """

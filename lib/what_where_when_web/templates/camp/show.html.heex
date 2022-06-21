@@ -1,0 +1,14 @@
+<h1><%= @camp.name %></h1>
+
+
+<h3>Campers</h3>
+
+<ul>
+<%= for member <- @camp.members do %>
+<li><%= WhatWhereWhen.People.Person.name(member) %></li>
+<% end %>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.camp_path(@conn, :edit, @camp) %></span> |
+<span><%= link "Back", to: Routes.camp_path(@conn, :index) %></span>

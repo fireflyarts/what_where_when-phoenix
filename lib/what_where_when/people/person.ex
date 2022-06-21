@@ -12,8 +12,13 @@ defmodule WhatWhereWhen.People.Person do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
 
+    belongs_to :camp, WhatWhereWhen.ThemeCamps.Camp
+
     timestamps()
   end
+
+  def name(%{burn_name: bn}) when not is_nil(bn), do: bn
+  def name(%{id_name: idn}), do: String.split(idn, " ") |> List.first()
 
   @doc false
   def preregistration_changeset(person, attrs) do

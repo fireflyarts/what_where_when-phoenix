@@ -2,15 +2,16 @@ defmodule WhatWhereWhenWeb.PersonSettingsControllerTest do
   use WhatWhereWhenWeb.ConnCase
 
   alias WhatWhereWhen.People
+  alias WhatWhereWhen.People.Person
   import WhatWhereWhen.PeopleFixtures
 
   setup :register_and_log_in_person
 
   describe "GET /people/settings" do
-    test "renders settings page", %{conn: conn} do
+    test "renders settings page", %{conn: conn, person: person} do
       conn = get(conn, Routes.person_settings_path(conn, :edit))
       response = html_response(conn, 200)
-      assert response =~ "<h1>Settings</h1>"
+      assert response =~ "<h1>#{Person.name(person)}</h1>"
     end
 
     test "redirects if person is not logged in" do
@@ -38,7 +39,7 @@ defmodule WhatWhereWhenWeb.PersonSettingsControllerTest do
       assert People.get_person_by_email_and_password(person.email, "new valid password")
     end
 
-    test "does not update password on invalid data", %{conn: conn} do
+    test "does not update password on invalid data", %{conn: conn, person: person} do
       old_password_conn =
         put(conn, Routes.person_settings_path(conn, :update), %{
           "action" => "update_password",
@@ -50,7 +51,7 @@ defmodule WhatWhereWhenWeb.PersonSettingsControllerTest do
         })
 
       response = html_response(old_password_conn, 200)
-      assert response =~ "<h1>Settings</h1>"
+      assert response =~ "<h1>#{Person.name(person)}</h1>"
       assert response =~ "should be at least 12 characters"
       assert response =~ "does not match password"
       assert response =~ "is not valid"
@@ -74,19 +75,19 @@ defmodule WhatWhereWhenWeb.PersonSettingsControllerTest do
       assert People.get_person_by_email(person.email)
     end
 
-  test "does not update email on invalid data", %{conn: conn} do
-    conn =
-      put(conn, Routes.person_settings_path(conn, :update), %{
-        "action" => "update_email",
-        "current_password" => "invalid",
-        "person" => %{"email" => "with spaces"}
-      })
+    test "does not update email on invalid data", %{conn: conn, person: person} do
+      conn =
+        put(conn, Routes.person_settings_path(conn, :update), %{
+          "action" => "update_email",
+          "current_password" => "invalid",
+          "person" => %{"email" => "with spaces"}
+        })
 
-    response = html_response(conn, 200)
-    assert response =~ "<h1>Settings</h1>"
-    assert response =~ "must have the @ sign and no spaces"
-    assert response =~ "is not valid"
-  end
+      response = html_response(conn, 200)
+      assert response =~ "<h1>#{Person.name(person)}</h1>"
+      assert response =~ "must have the @ sign and no spaces"
+      assert response =~ "is not valid"
+    end
   end
 
   describe "GET /people/settings/confirm_email/:token" do

@@ -1,0 +1,26 @@
+<h1>Listing Camps</h1>
+
+<table>
+  <thead>
+    <tr>
+
+      <th>Name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for camp <- @camps do %>
+    <tr>
+    <td> <%= camp.name %> </td>
+
+      <td>
+        <span><%= link "Show", to: Routes.camp_path(@conn, :show, camp) %></span>
+        <span><%= link "Edit", to: Routes.camp_path(@conn, :edit, camp) %></span>
+        <span><%= link "Delete", to: Routes.camp_path(@conn, :delete, camp), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Camp", to: Routes.camp_path(@conn, :new) %></span>
