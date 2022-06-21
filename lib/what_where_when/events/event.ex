@@ -5,6 +5,8 @@ defmodule WhatWhereWhen.Events.Event do
   import Ecto.Query, only: [from: 2]
 
   alias WhatWhereWhen.Events.Category
+  alias WhatWhereWhen.People.Person
+  alias WhatWhereWhen.ThemeCamps.Camp
   alias WhatWhereWhen.Repo
 
   schema "events" do
@@ -16,15 +18,30 @@ defmodule WhatWhereWhen.Events.Event do
 
     belongs_to :category, WhatWhereWhen.Events.Category
     field :minimum_age, :integer, default: 0
+
+    belongs_to :owning_person, Person
+    belongs_to :owning_camp, Camp
+
     timestamps()
   end
 
   @doc false
   def changeset(event, attrs) do
     event
-    |> cast(attrs, [:name, :description, :start_date, :start_time, :category_id, :minimum_age])
+    |> cast(attrs, [
+      :name,
+      :description,
+      :start_date,
+      :start_time,
+      :category_id,
+      :minimum_age,
+      :owning_person_id,
+      :owning_camp_id
+    ])
     |> validate_required([:name, :description, :start_date, :minimum_age])
     |> assoc_constraint(:category)
+    |> check_constraint(:owning_person_id, name: "owning_person_xor_camp")
+    |> check_constraint(:owning_camp_id, name: "owning_person_xor_camp")
     |> validate_age_coherence()
   end
 

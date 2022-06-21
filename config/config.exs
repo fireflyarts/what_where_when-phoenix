@@ -24,7 +24,7 @@ config :what_where_when, WhatWhereWhenWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-#config :what_where_when, WhatWhereWhen.Mailer, adapter: Swoosh.Adapters.Local
+# config :what_where_when, WhatWhereWhen.Mailer, adapter: Swoosh.Adapters.Local
 
 # Swoosh API client is needed for adapters other than SMTP.
 # config :swoosh, :api_client, false

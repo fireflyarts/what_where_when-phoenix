@@ -2,21 +2,22 @@ defmodule WhatWhereWhen.EventsTest do
   use WhatWhereWhen.DataCase
 
   alias WhatWhereWhen.Events
+  import WhatWhereWhen.EventsFixtures
 
   describe "creating any event" do
     test "requires a name" do
-      assert {:error, cs} = Events.create_event(%{})
+      assert {:error, cs} = event_fixture_tagged(%{})
       assert elem(cs.errors[:name], 1) == [validation: :required]
     end
 
     test "requires a description" do
-      assert {:error, cs} = Events.create_event(%{})
+      assert {:error, cs} = event_fixture_tagged(%{})
       assert elem(cs.errors[:description], 1) == [validation: :required]
     end
 
     test "requires a start date" do
-      assert {:error, cs} = Events.create_event(%{})
-      assert elem(cs.errors[:start_date], 1) == [validation: :required]
+      assert {:error, cs} = event_fixture_tagged(%{start_date: nil})
+      assert {_, [validation: :required] }  = cs.errors[:start_date]
     end
   end
 
@@ -25,20 +26,20 @@ defmodule WhatWhereWhen.EventsTest do
 
     test "can create an unrestricted event", ctx do
       assert {:ok, _e} =
-               Events.create_event(%{
+               event_fixture_tagged(%{
                  name: "All in All",
                  description: "All ages event in all ages category",
-                 start_date: Date.utc_today(),
+
                  category_id: ctx[:category].id
                })
     end
 
     test "can create a more restricted event", ctx do
       assert {:ok, _e} =
-               Events.create_event(%{
+               event_fixture_tagged(%{
                  name: "10+ in All",
                  description: "somewhat restricted event in all ages category",
-                 start_date: Date.utc_today(),
+
                  category_id: ctx[:category].id,
                  minimum_age: 10
                })
@@ -50,10 +51,10 @@ defmodule WhatWhereWhen.EventsTest do
 
     test "can can create an equally restricted event", ctx do
       assert {:ok, _e} =
-               Events.create_event(%{
+               event_fixture_tagged(%{
                  name: "18+ in 18+",
                  description: "18+ event in a 18+ category",
-                 start_date: Date.utc_today(),
+
                  category_id: ctx[:category_18_plus].id,
                  minimum_age: 18
                })
@@ -61,10 +62,10 @@ defmodule WhatWhereWhen.EventsTest do
 
     test "can create a more restricted event", ctx do
       assert {:ok, _e} =
-               Events.create_event(%{
+               event_fixture_tagged(%{
                  name: "21+ in 18+",
                  description: "21+ event in a 18+ category",
-                 start_date: Date.utc_today(),
+
                  category_id: ctx[:category_18_plus].id,
                  minimum_age: 21
                })
@@ -72,10 +73,10 @@ defmodule WhatWhereWhen.EventsTest do
 
     test "can NOT create an unrestricted event", ctx do
       assert {:error, cs} =
-               Events.create_event(%{
+               event_fixture_tagged(%{
                  name: "all-ages in 18+",
                  description: "21+ event in a 18+ category",
-                 start_date: Date.utc_today(),
+
                  category_id: ctx[:category_18_plus].id
                })
 
@@ -91,10 +92,10 @@ defmodule WhatWhereWhen.EventsTest do
 
     test "can NOT create a LESS restricted event", ctx do
       assert {:error, cs} =
-               Events.create_event(%{
+               event_fixture_tagged(%{
                  name: "all-ages in 18+",
                  description: "21+ event in a 18+ category",
-                 start_date: Date.utc_today(),
+
                  category_id: ctx[:category_18_plus].id,
                  minimum_age: 16
                })

@@ -1,6 +1,8 @@
 defmodule WhatWhereWhenWeb.Router do
   use WhatWhereWhenWeb, :router
 
+  import WhatWhereWhenWeb.PersonAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule WhatWhereWhenWeb.Router do
     plug :put_root_layout, {WhatWhereWhenWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_person
   end
 
   pipeline :api do
@@ -24,7 +27,6 @@ defmodule WhatWhereWhenWeb.Router do
   # scope "/api", WhatWhereWhenWeb do
   #   pipe_through :api
   # end
-
 
   if Mix.env() === :dev do
     import Phoenix.LiveDashboard.Router
@@ -46,5 +48,38 @@ defmodule WhatWhereWhenWeb.Router do
 
       # forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  ## Authentication routes
+
+  scope "/", WhatWhereWhenWeb do
+    pipe_through [:browser, :redirect_if_person_is_authenticated]
+
+    get "/people/register", PersonRegistrationController, :new
+    post "/people/register", PersonRegistrationController, :create
+    get "/people/log_in", PersonSessionController, :new
+    post "/people/log_in", PersonSessionController, :create
+    get "/people/reset_password", PersonResetPasswordController, :new
+    post "/people/reset_password", PersonResetPasswordController, :create
+    get "/people/reset_password/:token", PersonResetPasswordController, :edit
+    put "/people/reset_password/:token", PersonResetPasswordController, :update
+  end
+
+  scope "/", WhatWhereWhenWeb do
+    pipe_through [:browser, :require_authenticated_person]
+
+    get "/people/settings", PersonSettingsController, :edit
+    put "/people/settings", PersonSettingsController, :update
+    get "/people/settings/confirm_email/:token", PersonSettingsController, :confirm_email
+  end
+
+  scope "/", WhatWhereWhenWeb do
+    pipe_through [:browser]
+
+    delete "/people/log_out", PersonSessionController, :delete
+    get "/people/confirm", PersonConfirmationController, :new
+    post "/people/confirm", PersonConfirmationController, :create
+    get "/people/confirm/:token", PersonConfirmationController, :edit
+    post "/people/confirm/:token", PersonConfirmationController, :update
   end
 end

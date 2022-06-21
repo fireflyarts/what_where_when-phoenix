@@ -33,6 +33,7 @@ defmodule WhatWhereWhen.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:bcrypt_elixir, "~> 3.0"},
       # framework and view layers
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
       {:phoenix, "~> 1.6.10"},
