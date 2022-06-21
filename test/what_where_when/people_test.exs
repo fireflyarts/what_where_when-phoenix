@@ -63,7 +63,7 @@ defmodule WhatWhereWhen.PeopleTest do
 
       assert %{
                email: ["must have the @ sign and no spaces"],
-               password: ["should be at least 12 character(s)"]
+               password: ["should be at least 12 characters"]
              } = errors_on(changeset)
     end
 
@@ -71,7 +71,6 @@ defmodule WhatWhereWhen.PeopleTest do
       too_long = String.duplicate("db", 100)
       {:error, changeset} = People.register_person(%{email: too_long, password: too_long})
       assert "should be at most 160 character(s)" in errors_on(changeset).email
-      assert "should be at most 72 character(s)" in errors_on(changeset).password
     end
 
     test "validates email uniqueness" do
@@ -174,68 +173,68 @@ defmodule WhatWhereWhen.PeopleTest do
     end
   end
 
-  # describe "deliver_update_email_instructions/3" do
-  #   setup do
-  #     %{person: person_fixture()}
-  #   end
+  describe "deliver_update_email_instructions/3" do
+    setup do
+      %{person: person_fixture()}
+    end
 
-  #   test "sends token through notification", %{person: person} do
-  #     token =
-  #       extract_person_token(fn url ->
-  #         People.deliver_update_email_instructions(person, "current@example.com", url)
-  #       end)
+    test "sends token through notification", %{person: person} do
+      token =
+        extract_person_token(fn url ->
+          People.deliver_update_email_instructions(person, "current@example.com", url)
+        end)
 
-  #     {:ok, token} = Base.url_decode64(token, padding: false)
-  #     assert person_token = Repo.get_by(PersonToken, token: :crypto.hash(:sha256, token))
-  #     assert person_token.person_id == person.id
-  #     assert person_token.sent_to == person.email
-  #     assert person_token.context == "change:current@example.com"
-  #   end
-  # end
+      {:ok, token} = Base.url_decode64(token, padding: false)
+      assert person_token = Repo.get_by(PersonToken, token: :crypto.hash(:sha256, token))
+      assert person_token.person_id == person.id
+      assert person_token.sent_to == person.email
+      assert person_token.context == "change:current@example.com"
+    end
+  end
 
-  #   describe "update_person_email/2" do
-  #     setup do
-  #       person = person_fixture()
-  #       email = unique_person_email()
-  #
-  #       token =
-  #         extract_person_token(fn url ->
-  #           People.deliver_update_email_instructions(%{person | email: email}, person.email, url)
-  #         end)
-  #
-  #       %{person: person, token: token, email: email}
-  #     end
-  #
-  #     test "updates the email with a valid token", %{person: person, token: token, email: email} do
-  #       assert People.update_person_email(person, token) == :ok
-  #       changed_person = Repo.get!(Person, person.id)
-  #       assert changed_person.email != person.email
-  #       assert changed_person.email == email
-  #       assert changed_person.confirmed_at
-  #       assert changed_person.confirmed_at != person.confirmed_at
-  #       refute Repo.get_by(PersonToken, person_id: person.id)
-  #     end
-  #
-  #     test "does not update email with invalid token", %{person: person} do
-  #       assert People.update_person_email(person, "oops") == :error
-  #       assert Repo.get!(Person, person.id).email == person.email
-  #       assert Repo.get_by(PersonToken, person_id: person.id)
-  #     end
-  #
-  #     test "does not update email if person email changed", %{person: person, token: token} do
-  #       assert People.update_person_email(%{person | email: "current@example.com"}, token) == :error
-  #       assert Repo.get!(Person, person.id).email == person.email
-  #       assert Repo.get_by(PersonToken, person_id: person.id)
-  #     end
-  #
-  #     test "does not update email if token expired", %{person: person, token: token} do
-  #       {1, nil} = Repo.update_all(PersonToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
-  #       assert People.update_person_email(person, token) == :error
-  #       assert Repo.get!(Person, person.id).email == person.email
-  #       assert Repo.get_by(PersonToken, person_id: person.id)
-  #     end
-  #   end
-  #
+  describe "update_person_email/2" do
+    setup do
+      person = person_fixture()
+      email = unique_person_email()
+
+      token =
+        extract_person_token(fn url ->
+          People.deliver_update_email_instructions(%{person | email: email}, person.email, url)
+        end)
+
+      %{person: person, token: token, email: email}
+    end
+
+    test "updates the email with a valid token", %{person: person, token: token, email: email} do
+      assert People.update_person_email(person, token) == :ok
+      changed_person = Repo.get!(Person, person.id)
+      assert changed_person.email != person.email
+      assert changed_person.email == email
+      assert changed_person.confirmed_at
+      assert changed_person.confirmed_at != person.confirmed_at
+      refute Repo.get_by(PersonToken, person_id: person.id)
+    end
+
+    test "does not update email with invalid token", %{person: person} do
+      assert People.update_person_email(person, "oops") == :error
+      assert Repo.get!(Person, person.id).email == person.email
+      assert Repo.get_by(PersonToken, person_id: person.id)
+    end
+
+    test "does not update email if person email changed", %{person: person, token: token} do
+      assert People.update_person_email(%{person | email: "current@example.com"}, token) == :error
+      assert Repo.get!(Person, person.id).email == person.email
+      assert Repo.get_by(PersonToken, person_id: person.id)
+    end
+
+    test "does not update email if token expired", %{person: person, token: token} do
+      {1, nil} = Repo.update_all(PersonToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
+      assert People.update_person_email(person, token) == :error
+      assert Repo.get!(Person, person.id).email == person.email
+      assert Repo.get_by(PersonToken, person_id: person.id)
+    end
+  end
+
   describe "change_person_password/2" do
     test "returns a person changeset" do
       assert %Ecto.Changeset{} = changeset = People.change_person_password(%Person{})
@@ -267,18 +266,9 @@ defmodule WhatWhereWhen.PeopleTest do
         })
 
       assert %{
-               password: ["should be at least 12 character(s)"],
+               password: ["should be at least 12 characters"],
                password_confirmation: ["does not match password"]
              } = errors_on(changeset)
-    end
-
-    test "validates maximum values for password for security", %{person: person} do
-      too_long = String.duplicate("db", 100)
-
-      {:error, changeset} =
-        People.update_person_password(person, valid_person_password(), %{password: too_long})
-
-      assert "should be at most 72 character(s)" in errors_on(changeset).password
     end
 
     test "validates current password", %{person: person} do
@@ -362,145 +352,139 @@ defmodule WhatWhereWhen.PeopleTest do
     end
   end
 
-  # describe "deliver_person_confirmation_instructions/2" do
-  #   setup do
-  #     %{person: person_fixture()}
-  #   end
+  describe "deliver_person_confirmation_instructions/2" do
+    setup do
+      %{person: person_fixture()}
+    end
 
-  #   test "sends token through notification", %{person: person} do
-  #     token =
-  #       extract_person_token(fn url ->
-  #         People.deliver_person_confirmation_instructions(person, url)
-  #       end)
+    test "sends token through notification", %{person: person} do
+      token =
+        extract_person_token(fn url ->
+          People.deliver_person_confirmation_instructions(person, url)
+        end)
 
-  #     {:ok, token} = Base.url_decode64(token, padding: false)
-  #     assert person_token = Repo.get_by(PersonToken, token: :crypto.hash(:sha256, token))
-  #     assert person_token.person_id == person.id
-  #     assert person_token.sent_to == person.email
-  #     assert person_token.context == "confirm"
-  #   end
-  # end
+      {:ok, token} = Base.url_decode64(token, padding: false)
+      assert person_token = Repo.get_by(PersonToken, token: :crypto.hash(:sha256, token))
+      assert person_token.person_id == person.id
+      assert person_token.sent_to == person.email
+      assert person_token.context == "confirm"
+    end
+  end
 
-  #   describe "confirm_person/1" do
-  #     setup do
-  #       person = person_fixture()
-  #
-  #       token =
-  #         extract_person_token(fn url ->
-  #           People.deliver_person_confirmation_instructions(person, url)
-  #         end)
-  #
-  #       %{person: person, token: token}
-  #     end
-  #
-  #     test "confirms the email with a valid token", %{person: person, token: token} do
-  #       assert {:ok, confirmed_person} = People.confirm_person(token)
-  #       assert confirmed_person.confirmed_at
-  #       assert confirmed_person.confirmed_at != person.confirmed_at
-  #       assert Repo.get!(Person, person.id).confirmed_at
-  #       refute Repo.get_by(PersonToken, person_id: person.id)
-  #     end
-  #
-  #     test "does not confirm with invalid token", %{person: person} do
-  #       assert People.confirm_person("oops") == :error
-  #       refute Repo.get!(Person, person.id).confirmed_at
-  #       assert Repo.get_by(PersonToken, person_id: person.id)
-  #     end
-  #
-  #     test "does not confirm email if token expired", %{person: person, token: token} do
-  #       {1, nil} = Repo.update_all(PersonToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
-  #       assert People.confirm_person(token) == :error
-  #       refute Repo.get!(Person, person.id).confirmed_at
-  #       assert Repo.get_by(PersonToken, person_id: person.id)
-  #     end
-  #   end
+  describe "confirm_person/1" do
+    setup do
+      person = person_fixture()
 
-  #   describe "deliver_person_reset_password_instructions/2" do
-  #     setup do
-  #       %{person: person_fixture()}
-  #     end
-  #
-  #     test "sends token through notification", %{person: person} do
-  #       token =
-  #         extract_person_token(fn url ->
-  #           People.deliver_person_reset_password_instructions(person, url)
-  #         end)
-  #
-  #       {:ok, token} = Base.url_decode64(token, padding: false)
-  #       assert person_token = Repo.get_by(PersonToken, token: :crypto.hash(:sha256, token))
-  #       assert person_token.person_id == person.id
-  #       assert person_token.sent_to == person.email
-  #       assert person_token.context == "reset_password"
-  #     end
-  #   end
-  #
-  #   describe "get_person_by_reset_password_token/1" do
-  #     setup do
-  #       person = person_fixture()
-  #
-  #       token =
-  #         extract_person_token(fn url ->
-  #           People.deliver_person_reset_password_instructions(person, url)
-  #         end)
-  #
-  #       %{person: person, token: token}
-  #     end
-  #
-  #     test "returns the person with valid token", %{person: %{id: id}, token: token} do
-  #       assert %Person{id: ^id} = People.get_person_by_reset_password_token(token)
-  #       assert Repo.get_by(PersonToken, person_id: id)
-  #     end
-  #
-  #     test "does not return the person with invalid token", %{person: person} do
-  #       refute People.get_person_by_reset_password_token("oops")
-  #       assert Repo.get_by(PersonToken, person_id: person.id)
-  #     end
-  #
-  #     test "does not return the person if token expired", %{person: person, token: token} do
-  #       {1, nil} = Repo.update_all(PersonToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
-  #       refute People.get_person_by_reset_password_token(token)
-  #       assert Repo.get_by(PersonToken, person_id: person.id)
-  #     end
-  #   end
-  #
-  #   describe "reset_person_password/2" do
-  #     setup do
-  #       %{person: person_fixture()}
-  #     end
-  #
-  #     test "validates password", %{person: person} do
-  #       {:error, changeset} =
-  #         People.reset_person_password(person, %{
-  #           password: "not valid",
-  #           password_confirmation: "another"
-  #         })
-  #
-  #       assert %{
-  #                password: ["should be at least 12 character(s)"],
-  #                password_confirmation: ["does not match password"]
-  #              } = errors_on(changeset)
-  #     end
-  #
-  #     test "validates maximum values for password for security", %{person: person} do
-  #       too_long = String.duplicate("db", 100)
-  #       {:error, changeset} = People.reset_person_password(person, %{password: too_long})
-  #       assert "should be at most 72 character(s)" in errors_on(changeset).password
-  #     end
-  #
-  #     test "updates the password", %{person: person} do
-  #       {:ok, updated_person} =
-  #         People.reset_person_password(person, %{password: "new valid password"})
-  #
-  #       assert is_nil(updated_person.password)
-  #       assert People.get_person_by_email_and_password(person.email, "new valid password")
-  #     end
-  #
-  #     test "deletes all tokens for the given person", %{person: person} do
-  #       _ = People.generate_person_session_token(person)
-  #       {:ok, _} = People.reset_person_password(person, %{password: "new valid password"})
-  #       refute Repo.get_by(PersonToken, person_id: person.id)
-  #     end
-  #   end
+      token =
+        extract_person_token(fn url ->
+          People.deliver_person_confirmation_instructions(person, url)
+        end)
+
+      %{person: person, token: token}
+    end
+
+    test "confirms the email with a valid token", %{person: person, token: token} do
+      assert {:ok, confirmed_person} = People.confirm_person(token)
+      assert confirmed_person.confirmed_at
+      assert confirmed_person.confirmed_at != person.confirmed_at
+      assert Repo.get!(Person, person.id).confirmed_at
+      refute Repo.get_by(PersonToken, person_id: person.id)
+    end
+
+    test "does not confirm with invalid token", %{person: person} do
+      assert People.confirm_person("oops") == :error
+      refute Repo.get!(Person, person.id).confirmed_at
+      assert Repo.get_by(PersonToken, person_id: person.id)
+    end
+
+    test "does not confirm email if token expired", %{person: person, token: token} do
+      {1, nil} = Repo.update_all(PersonToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
+      assert People.confirm_person(token) == :error
+      refute Repo.get!(Person, person.id).confirmed_at
+      assert Repo.get_by(PersonToken, person_id: person.id)
+    end
+  end
+
+  describe "deliver_person_reset_password_instructions/2" do
+    setup do
+      %{person: person_fixture()}
+    end
+
+    test "sends token through notification", %{person: person} do
+      token =
+        extract_person_token(fn url ->
+          People.deliver_person_reset_password_instructions(person, url)
+        end)
+
+      {:ok, token} = Base.url_decode64(token, padding: false)
+      assert person_token = Repo.get_by(PersonToken, token: :crypto.hash(:sha256, token))
+      assert person_token.person_id == person.id
+      assert person_token.sent_to == person.email
+      assert person_token.context == "reset_password"
+    end
+  end
+
+  describe "get_person_by_reset_password_token/1" do
+    setup do
+      person = person_fixture()
+
+      token =
+        extract_person_token(fn url ->
+          People.deliver_person_reset_password_instructions(person, url)
+        end)
+
+      %{person: person, token: token}
+    end
+
+    test "returns the person with valid token", %{person: %{id: id}, token: token} do
+      assert %Person{id: ^id} = People.get_person_by_reset_password_token(token)
+      assert Repo.get_by(PersonToken, person_id: id)
+    end
+
+    test "does not return the person with invalid token", %{person: person} do
+      refute People.get_person_by_reset_password_token("oops")
+      assert Repo.get_by(PersonToken, person_id: person.id)
+    end
+
+    test "does not return the person if token expired", %{person: person, token: token} do
+      {1, nil} = Repo.update_all(PersonToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
+      refute People.get_person_by_reset_password_token(token)
+      assert Repo.get_by(PersonToken, person_id: person.id)
+    end
+  end
+
+  describe "reset_person_password/2" do
+    setup do
+      %{person: person_fixture()}
+    end
+
+    test "validates password", %{person: person} do
+      {:error, changeset} =
+        People.reset_person_password(person, %{
+          password: "not valid",
+          password_confirmation: "another"
+        })
+
+      assert %{
+               password: ["should be at least 12 characters"],
+               password_confirmation: ["does not match password"]
+             } = errors_on(changeset)
+    end
+
+    test "updates the password", %{person: person} do
+      {:ok, updated_person} =
+        People.reset_person_password(person, %{password: "new valid password"})
+
+      assert is_nil(updated_person.password)
+      assert People.get_person_by_email_and_password(person.email, "new valid password")
+    end
+
+    test "deletes all tokens for the given person", %{person: person} do
+      _ = People.generate_person_session_token(person)
+      {:ok, _} = People.reset_person_password(person, %{password: "new valid password"})
+      refute Repo.get_by(PersonToken, person_id: person.id)
+    end
+  end
 
   describe "inspect/2" do
     test "does not include password" do

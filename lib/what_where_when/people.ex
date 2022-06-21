@@ -5,9 +5,7 @@ defmodule WhatWhereWhen.People do
 
   import Ecto.Query, warn: false
   alias WhatWhereWhen.Repo
-
-  # PersonNotifier}
-  alias WhatWhereWhen.People.{Person, PersonToken}
+  alias WhatWhereWhen.People.{Person, PersonToken, PersonNotifier}
 
   ## Database getters
 
@@ -174,13 +172,14 @@ defmodule WhatWhereWhen.People do
 
   """
 
-  # def deliver_update_email_instructions(%Person{} = person, current_email, update_email_url_fun)
-  #     when is_function(update_email_url_fun, 1) do
-  #   {encoded_token, person_token} = PersonToken.build_email_token(person, "change:#{current_email}")
+  def deliver_update_email_instructions(%Person{} = person, current_email, update_email_url_fun)
+      when is_function(update_email_url_fun, 1) do
+    {encoded_token, person_token} =
+      PersonToken.build_email_token(person, "change:#{current_email}")
 
-  #   Repo.insert!(person_token)
-  #   PersonNotifier.deliver_update_email_instructions(person, update_email_url_fun.(encoded_token))
-  # end
+    Repo.insert!(person_token)
+    PersonNotifier.deliver_update_email_instructions(person, update_email_url_fun.(encoded_token))
+  end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for changing the person password.
@@ -265,16 +264,20 @@ defmodule WhatWhereWhen.People do
 
   """
 
-  # def deliver_person_confirmation_instructions(%Person{} = person, confirmation_url_fun)
-  #     when is_function(confirmation_url_fun, 1) do
-  #   if person.confirmed_at do
-  #     {:error, :already_confirmed}
-  #   else
-  #     {encoded_token, person_token} = PersonToken.build_email_token(person, "confirm")
-  #     Repo.insert!(person_token)
-  #     PersonNotifier.deliver_confirmation_instructions(person, confirmation_url_fun.(encoded_token))
-  #   end
-  # end
+  def deliver_person_confirmation_instructions(%Person{} = person, confirmation_url_fun)
+      when is_function(confirmation_url_fun, 1) do
+    if person.confirmed_at do
+      {:error, :already_confirmed}
+    else
+      {encoded_token, person_token} = PersonToken.build_email_token(person, "confirm")
+      Repo.insert!(person_token)
+
+      PersonNotifier.deliver_confirmation_instructions(
+        person,
+        confirmation_url_fun.(encoded_token)
+      )
+    end
+  end
 
   @doc """
   Confirms a person by the given token.
@@ -310,12 +313,16 @@ defmodule WhatWhereWhen.People do
 
   """
 
-  # def deliver_person_reset_password_instructions(%Person{} = person, reset_password_url_fun)
-  #     when is_function(reset_password_url_fun, 1) do
-  #   {encoded_token, person_token} = PersonToken.build_email_token(person, "reset_password")
-  #   Repo.insert!(person_token)
-  #   PersonNotifier.deliver_reset_password_instructions(person, reset_password_url_fun.(encoded_token))
-  # end
+  def deliver_person_reset_password_instructions(%Person{} = person, reset_password_url_fun)
+      when is_function(reset_password_url_fun, 1) do
+    {encoded_token, person_token} = PersonToken.build_email_token(person, "reset_password")
+    Repo.insert!(person_token)
+
+    PersonNotifier.deliver_reset_password_instructions(
+      person,
+      reset_password_url_fun.(encoded_token)
+    )
+  end
 
   @doc """
   Gets the person by reset password token.

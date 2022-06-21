@@ -29,7 +29,7 @@ defmodule WhatWhereWhen.ThemeCampsTest do
     end
 
     test "create_camp/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = ThemeCamps.create_camp(invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = ThemeCamps.create_camp(invalid_attrs())
     end
 
     test "update_camp/2 with valid data updates the camp" do
@@ -42,7 +42,7 @@ defmodule WhatWhereWhen.ThemeCampsTest do
 
     test "update_camp/2 with invalid data returns error changeset" do
       camp = camp_fixture()
-      assert {:error, %Ecto.Changeset{}} = ThemeCamps.update_camp(camp, invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = ThemeCamps.update_camp(camp, invalid_attrs())
       assert camp == ThemeCamps.get_camp!(camp.id)
     end
 

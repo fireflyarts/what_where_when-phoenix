@@ -17,7 +17,7 @@ defmodule WhatWhereWhen.EventsTest do
 
     test "requires a start date" do
       assert {:error, cs} = event_fixture_tagged(%{start_date: nil})
-      assert {_, [validation: :required] }  = cs.errors[:start_date]
+      assert {_, [validation: :required]} = cs.errors[:start_date]
     end
   end
 
@@ -29,7 +29,6 @@ defmodule WhatWhereWhen.EventsTest do
                event_fixture_tagged(%{
                  name: "All in All",
                  description: "All ages event in all ages category",
-
                  category_id: ctx[:category].id
                })
     end
@@ -39,7 +38,6 @@ defmodule WhatWhereWhen.EventsTest do
                event_fixture_tagged(%{
                  name: "10+ in All",
                  description: "somewhat restricted event in all ages category",
-
                  category_id: ctx[:category].id,
                  minimum_age: 10
                })
@@ -54,7 +52,6 @@ defmodule WhatWhereWhen.EventsTest do
                event_fixture_tagged(%{
                  name: "18+ in 18+",
                  description: "18+ event in a 18+ category",
-
                  category_id: ctx[:category_18_plus].id,
                  minimum_age: 18
                })
@@ -65,7 +62,6 @@ defmodule WhatWhereWhen.EventsTest do
                event_fixture_tagged(%{
                  name: "21+ in 18+",
                  description: "21+ event in a 18+ category",
-
                  category_id: ctx[:category_18_plus].id,
                  minimum_age: 21
                })
@@ -76,7 +72,6 @@ defmodule WhatWhereWhen.EventsTest do
                event_fixture_tagged(%{
                  name: "all-ages in 18+",
                  description: "21+ event in a 18+ category",
-
                  category_id: ctx[:category_18_plus].id
                })
 
@@ -95,7 +90,6 @@ defmodule WhatWhereWhen.EventsTest do
                event_fixture_tagged(%{
                  name: "all-ages in 18+",
                  description: "21+ event in a 18+ category",
-
                  category_id: ctx[:category_18_plus].id,
                  minimum_age: 16
                })

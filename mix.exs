@@ -60,10 +60,10 @@ defmodule WhatWhereWhen.MixProject do
       # operations/monitoring layer
       {:phoenix_live_dashboard, "~> 0.6", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
-      {:telemetry_poller, "~> 1.0"}
+      {:telemetry_poller, "~> 1.0"},
 
-      # disabled, kept for discoverability
-      # {:swoosh, "~> 1.3"}, # for sending emails
+      # email
+      {:swoosh, "~> 1.3"}
     ]
   end
 

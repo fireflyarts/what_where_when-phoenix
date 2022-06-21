@@ -8,11 +8,11 @@ defmodule WhatWhereWhen.EventsFixtures do
   Generate a event. Include {:ok, } or {:error, }
   """
   def event_fixture_tagged(attrs \\ %{}) do
-      attrs
-      |> Enum.into(%{
-        owning_person_id: WhatWhereWhen.PeopleFixtures.person_fixture().id,
-        start_date: Date.utc_today()
-      })
-      |> WhatWhereWhen.Events.create_event()
+    attrs
+    |> Enum.into(%{
+      owning_person_id: WhatWhereWhen.PeopleFixtures.person_fixture().id,
+      start_date: Date.utc_today()
+    })
+    |> WhatWhereWhen.Events.create_event()
   end
 end
