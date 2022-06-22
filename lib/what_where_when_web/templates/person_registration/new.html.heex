@@ -20,7 +20,6 @@
   </div>
 </.form>
 
-<p>
-  <%= link "Log in", to: Routes.person_session_path(@conn, :new) %> |
+<p class="flex flex-col children:w-full children:h-10 children:m-2">
   <%= link "Forgot your password?", to: Routes.person_reset_password_path(@conn, :new) %>
 </p>

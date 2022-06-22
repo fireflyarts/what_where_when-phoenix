@@ -9,19 +9,10 @@
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
   </head>
-  <body>
-    <header>
-      <section class="container">
-        <nav>
-          <ul>
-          </ul>
-          <%= render "_person_menu.html", assigns %>
-        </nav>
-        <a href="/" class="logo">
-          <img src={Routes.static_path(@conn, "/images/firefly-logo.png")} alt="What Where When"/>
-        </a>
-      </section>
-    </header>
+  <body class="bg-slate-500 font-sans text-white relative min-h-screen">
+    <%= render "_header.html", assigns %>
+    <%= render "_nav.html", assigns %>
     <%= @inner_content %>
+    <%= render "_footer.html", assigns %>
   </body>
 </html>

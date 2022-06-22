@@ -1,5 +1,39 @@
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+
 /* This file is for your main application CSS */
-@import "./phoenix.css";
+
+body > header {
+  @apply h-24;
+  @apply w-full mx-auto px-4 py-2 bg-blue-600 border-b border-blue-900 text-amber-200;
+  @apply md:px-8;
+}
+
+form {
+  @apply flex flex-col;
+}
+
+h1 {
+  @apply text-2xl my-2;
+}
+
+h2 {
+  @apply text-lg my-2;
+}
+
+button,
+[type="button"],
+[type="submit"] {
+  @apply my-4 ring-2 p-2 bg-blue-400;
+}
+
+input {
+  color: black;
+}
+
 
 /* Alerts and form errors used by phx.new */
 .alert {
@@ -118,3 +152,6 @@
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+
+

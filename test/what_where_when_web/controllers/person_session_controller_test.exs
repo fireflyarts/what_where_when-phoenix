@@ -11,7 +11,6 @@ defmodule WhatWhereWhenWeb.PersonSessionControllerTest do
     test "renders log in page", %{conn: conn} do
       conn = get(conn, Routes.person_session_path(conn, :new))
       response = html_response(conn, 200)
-      assert response =~ "<h1>Log in</h1>"
       assert response =~ "Register</a>"
       assert response =~ "Forgot your password?</a>"
     end
@@ -36,7 +35,6 @@ defmodule WhatWhereWhenWeb.PersonSessionControllerTest do
       conn = get(conn, "/")
       response = html_response(conn, 200)
       assert response =~ "#{person.email}</a>"
-      assert response =~ "Log out</a>"
     end
 
     test "logs the person in with remember me", %{conn: conn, person: person} do
@@ -74,7 +72,6 @@ defmodule WhatWhereWhenWeb.PersonSessionControllerTest do
         })
 
       response = html_response(conn, 200)
-      assert response =~ "<h1>Log in</h1>"
       assert response =~ "Invalid email or password"
     end
   end

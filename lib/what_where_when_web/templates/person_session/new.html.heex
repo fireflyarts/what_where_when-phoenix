@@ -1,4 +1,4 @@
-<h1>Log in</h1>
+<h1 class="text-xl mb-3">Log in</h1>
 
 <.form let={f} for={@conn} action={Routes.person_session_path(@conn, :create)} as={:person}>
   <%= if @error_message do %>
@@ -13,15 +13,13 @@
   <%= label f, :password %>
   <%= password_input f, :password, required: true %>
 
-  <%= label f, :remember_me, "Keep me logged in for 60 days" %>
-  <%= checkbox f, :remember_me %>
 
   <div>
-    <%= submit "Log in" %>
+    <%= submit "Log in"%>
   </div>
 </.form>
 
-<p>
-  <%= link "Register", to: Routes.person_registration_path(@conn, :new) %> |
+<p class="flex flex-col children:w-full children:h-10 children:m-2">
   <%= link "Forgot your password?", to: Routes.person_reset_password_path(@conn, :new) %>
+  <%= link "Register", to: Routes.person_registration_path(@conn, :new) %>
 </p>

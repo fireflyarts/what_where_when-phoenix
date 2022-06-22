@@ -10,6 +10,7 @@ defmodule WhatWhereWhen.MixProject do
     [
       # Frontend/View layer
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.1.6", runtime: Mix.env() == :dev},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_view, "~> 0.17.5"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},

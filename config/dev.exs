@@ -12,6 +12,7 @@ wwwphx_allow_external_connections = System.get_env("WWWPHX_ALLOW_EXTERNAL_CONNEC
 
 frontend_watchers = [
   esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+  tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
 ]
 
 # Watch static and templates for browser reloading.
