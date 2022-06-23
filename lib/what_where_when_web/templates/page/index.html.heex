@@ -1,16 +1,17 @@
-<section class="">
-  <h1>Welcome!</h1>
+<section class="sm:inline-grid sm:grid-flow-row sm:grid-cols-2 sm:items-center sm:place-items-center sm:gap-x-3 xl:gap-x-36 sm:mx-3">
+  <h1 class="sm:col-span-2 sm:text-center">Welcome!</h1>
 
   <p> Please select "What?", "Where?", or "When?" above to find events. </p>
 
-  <img class="my-2" src={Routes.static_path(@conn, "/images/homepage-fill-1.jpg")} />
+  <img class="my-2 object-cover object-top max-h-[25vh] min-w-full sm:object-scale-down sm:min-w-0 sm:max-h-72 sm:max-w-2/3 sm:float-left" src={Routes.static_path(@conn, "/images/homepage-fill-1.jpg")} />
 
-  <p> Please select "Log in" to register your own!</p>
 
-  <img class="my-2 object-cover object-bottom max-h-[30vh] min-w-full" src={Routes.static_path(@conn, "/images/homepage-fill-2.jpg")} />
+  <p class=""> Please select "Log in" to register your own!</p>
 
-  <div id="map"></div>
-  <!-- <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/map.js")}></script> -->
+
+  <img class="my-2 object-cover object-bottom max-h-[25vh] min-w-full sm:min-w-0 sm:max-h-72 sm:max-w-2/3 sm:float-right" src={Routes.static_path(@conn, "/images/homepage-fill-2.jpg")} />
+
+
 
 </section>
 

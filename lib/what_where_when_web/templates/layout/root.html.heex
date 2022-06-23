@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-black">
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="height=device-height, initial-scale=1.0"/>
     <meta name="csrf-token" content={csrf_token_value()}>
+    <meta name="theme-color" content="#2563eb">
+
     <%= live_title_tag assigns[:page_title] || "WhatWhereWhen", suffix: " · Phoenix Framework" %>
+    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/map.css")}/>
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
   </head>
-  <body class="bg-slate-500 font-sans text-white relative min-h-screen">
+  <body class="bg-slate-500 font-sans text-white flex flex-col max-w-7xl xl:mx-auto">
     <%= render "_header.html", assigns %>
     <%= render "_nav.html", assigns %>
     <%= @inner_content %>

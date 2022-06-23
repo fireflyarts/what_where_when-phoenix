@@ -1,0 +1,10 @@
+defmodule WhatWhereWhen.Repo.Migrations.CreateLocations do
+  use Ecto.Migration
+
+  def change do
+    create table(:locations) do
+      add :latitude, :decimal
+      add :longitude, :decimal
+    end
+  end
+end

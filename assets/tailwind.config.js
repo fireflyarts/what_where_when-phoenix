@@ -5,5 +5,10 @@ module.exports = {
   theme: {
     extend: {},
   },
+  safelist: [
+    {
+      pattern: /(bg|border)-([^-]+)-\d\d\d/,
+    },
+  ],
   plugins: [require("@tailwindcss/forms"), require("tailwind-children")],
 };

@@ -20,7 +20,8 @@ defmodule WhatWhereWhenWeb.Endpoint do
     at: "/",
     from: :what_where_when,
     gzip: false,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only:
+      ~w(assets fonts images favicon.ico robots.txt layers-2x.png layers.png marker-icon-2x.png marker-icon.png marker-shadow.png)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

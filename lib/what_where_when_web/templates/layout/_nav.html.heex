@@ -1,7 +1,7 @@
 <nav
-  class="flex flex-row justify-around h-10 bg-amber-100 border-b-2 border-yellow-200 text-cyan-700 children:ring-1 children:p-2 children:mt-0.5 children:bg-yellow-100"
+  class="flex flex-row justify-around h-10 bg-amber-100 border-b-2 border-yellow-200 text-cyan-700 children:ring-1 children:p-2 children:mt-0.5 children:bg-yellow-100 flex-shrink-0"
 >
-  <a href="#">What</a>
-  <a href="#">Where</a>
+  <%= link "What", to: Routes.event_category_path(@conn, :index) %>
+  <%= link "Where", to: Routes.location_path(@conn, :index) %>
   <a href="#">When</a>
 </nav>

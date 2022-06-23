@@ -6,14 +6,20 @@
 
 /* This file is for your main application CSS */
 
+body {
+  min-height: 100%;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+ }
+
 body > header {
-  @apply h-24;
+  @apply h-24 sm:h-28;
   @apply w-full mx-auto px-4 py-2 bg-blue-600 border-b border-blue-900 text-amber-200;
   @apply md:px-8;
 }
 
 form {
-  @apply flex flex-col;
+  @apply flex flex-col max-w-lg;
 }
 
 h1 {
@@ -24,7 +30,6 @@ h2 {
   @apply text-lg my-2;
 }
 
-button,
 [type="button"],
 [type="submit"] {
   @apply my-4 ring-2 p-2 bg-blue-400;

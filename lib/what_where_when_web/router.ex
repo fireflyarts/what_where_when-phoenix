@@ -82,6 +82,9 @@ defmodule WhatWhereWhenWeb.Router do
     get "/people/confirm/:token", PersonConfirmationController, :edit
     post "/people/confirm/:token", PersonConfirmationController, :update
 
-    resources "/camps", CampController
+    get "/what", EventCategoryController, :index
+    get "/where", LocationController, :index
+
+    resources "/who/camps", CampController
   end
 end

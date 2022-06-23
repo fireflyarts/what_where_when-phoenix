@@ -1,0 +1,8 @@
+<% border_color = "red-600" %>
+<% background_color = "red-400" %>
+<button class={"min-w-[80%] my-1 text-center text-lg md:min-w-0 md:text-left inline-block p-1 border-solid rounded-lg border-2 border-#{border_color} bg-#{background_color}"}>
+
+<%= @category.emoji.unicode %>
+<%= to_string(@category) %>
+
+</button>
