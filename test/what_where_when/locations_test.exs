@@ -8,11 +8,11 @@ defmodule WhatWhereWhen.LocationsTest do
 
     import WhatWhereWhen.LocationsFixtures
 
-    @invalid_attrs %{latitude: nil, longitude: nil}
+    @invalid_attrs %{lat: nil, lng: nil}
 
     test "list_locations/0 returns all locations" do
       location = location_fixture()
-      assert Locations.list_locations() == [location]
+      assert [%Location{id: 1, type: :infra}, location] = Locations.list_locations()
     end
 
     test "get_location!/1 returns the location with given id" do
@@ -21,11 +21,11 @@ defmodule WhatWhereWhen.LocationsTest do
     end
 
     test "create_location/1 with valid data creates a location" do
-      valid_attrs = %{latitude: "120.5", longitude: "120.5"}
+      valid_attrs = %{type: :camp, lat: "120.5", lng: "120.5"}
 
       assert {:ok, %Location{} = location} = Locations.create_location(valid_attrs)
-      assert location.latitude == Decimal.new("120.5")
-      assert location.longitude == Decimal.new("120.5")
+      assert location.lat == Decimal.new("120.5")
+      assert location.lng == Decimal.new("120.5")
     end
 
     test "create_location/1 with invalid data returns error changeset" do
@@ -34,11 +34,11 @@ defmodule WhatWhereWhen.LocationsTest do
 
     test "update_location/2 with valid data updates the location" do
       location = location_fixture()
-      update_attrs = %{latitude: "456.7", longitude: "456.7"}
+      update_attrs = %{lat: "456.7", lng: "456.7"}
 
       assert {:ok, %Location{} = location} = Locations.update_location(location, update_attrs)
-      assert location.latitude == Decimal.new("456.7")
-      assert location.longitude == Decimal.new("456.7")
+      assert location.lat == Decimal.new("456.7")
+      assert location.lng == Decimal.new("456.7")
     end
 
     test "update_location/2 with invalid data returns error changeset" do

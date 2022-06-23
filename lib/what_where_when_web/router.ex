@@ -86,5 +86,7 @@ defmodule WhatWhereWhenWeb.Router do
     get "/where", LocationController, :index
 
     resources "/who/camps", CampController
+
+    resources "/events", EventController, only: [:new, :create]
   end
 end

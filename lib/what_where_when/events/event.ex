@@ -7,6 +7,7 @@ defmodule WhatWhereWhen.Events.Event do
   alias WhatWhereWhen.Events.Category
   alias WhatWhereWhen.People.Person
   alias WhatWhereWhen.ThemeCamps.Camp
+  alias WhatWhereWhen.Locations.Location
   alias WhatWhereWhen.Repo
 
   schema "events" do
@@ -16,11 +17,14 @@ defmodule WhatWhereWhen.Events.Event do
     field :start_date, :date
     field :start_time, :naive_datetime
 
+    field :sober_friendly, Ecto.Enum, values: [no: 0, options: 1, yes: 2]
     belongs_to :category, WhatWhereWhen.Events.Category
     field :minimum_age, :integer, default: 0
 
     belongs_to :owning_person, Person
     belongs_to :owning_camp, Camp
+
+    belongs_to :location, Location
 
     timestamps()
   end
@@ -32,13 +36,30 @@ defmodule WhatWhereWhen.Events.Event do
       :name,
       :description,
       :start_date,
-      :start_time,
       :category_id,
       :minimum_age,
+      :sober_friendly,
       :owning_person_id,
       :owning_camp_id
     ])
-    |> validate_required([:name, :description, :start_date, :minimum_age])
+    |> validate_required([
+      :name,
+      :description,
+      :start_date,
+      :minimum_age,
+      :sober_friendly
+    ])
+    |> cast_assoc(:location, required: true, with: &Location.changeset/2)
+    |> validate_change(:location, fn
+      :location, %Location{} ->
+        []
+
+      :location, %Ecto.Changeset{valid?: false} ->
+        [location: "Must be specified. Please click to place"]
+
+      :location, %Ecto.Changeset{valid?: true} ->
+        []
+    end)
     |> assoc_constraint(:category)
     |> check_constraint(:owning_person_id, name: "owning_person_xor_camp")
     |> check_constraint(:owning_camp_id, name: "owning_person_xor_camp")

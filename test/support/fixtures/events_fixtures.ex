@@ -11,7 +11,9 @@ defmodule WhatWhereWhen.EventsFixtures do
     attrs
     |> Enum.into(%{
       owning_person_id: WhatWhereWhen.PeopleFixtures.person_fixture().id,
-      start_date: Date.utc_today()
+      start_date: Date.utc_today(),
+      location: WhatWhereWhen.LocationsFixtures.location_fixture() |> Map.from_struct(),
+      sober_friendly: :yes
     })
     |> WhatWhereWhen.Events.create_event()
   end

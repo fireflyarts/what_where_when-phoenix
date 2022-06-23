@@ -11,8 +11,9 @@ defmodule WhatWhereWhen.LocationsFixtures do
     {:ok, location} =
       attrs
       |> Enum.into(%{
-        latitude: "120.5",
-        longitude: "120.5"
+        type: :event,
+        lat: "120.5",
+        lng: "120.5"
       })
       |> WhatWhereWhen.Locations.create_location()
 

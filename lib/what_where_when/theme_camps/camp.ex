@@ -4,6 +4,7 @@ defmodule WhatWhereWhen.ThemeCamps.Camp do
   import Ecto.Changeset
 
   alias WhatWhereWhen.People.Person
+  alias WhatWhereWhen.Locations.Location
 
   schema "camps" do
     field :emoji, Util.Ecto.Emoji
@@ -11,6 +12,8 @@ defmodule WhatWhereWhen.ThemeCamps.Camp do
 
     belongs_to :primary_contact, Person
     has_many :members, Person
+
+    belongs_to :location, Location
   end
 
   @doc false

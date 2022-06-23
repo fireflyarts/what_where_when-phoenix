@@ -8,7 +8,7 @@ import {
   ImageOverlay,
   Popup,
   Marker,
-  useMapEvents,
+  useMap,
 } from "react-leaflet";
 
 const width = 2376;
@@ -27,15 +27,10 @@ var bounds: LatLngBoundsExpression = [
   [height, width],
 ];
 
-const ClickLogger = () => {
-  const map = useMapEvents({
-    click(event) {
-      console.log(event.latlng);
-      console.log(map.getZoom());
-    },
-  });
+const HandleExfiltrator = () => {
+  window.map = useMap();
 
-  return;
+  return <></>;
 };
 
 interface MapProps {
@@ -46,7 +41,6 @@ const Map: React.FC<MapProps> = (props: MapProps) => {
   return (
     <MapContainer
       crs={CRS.Simple}
-      center={[3008, 1356]}
       zoom={-2.3}
       bounds={bounds}
       minZoom={-2.5}
@@ -70,23 +64,28 @@ const Map: React.FC<MapProps> = (props: MapProps) => {
         url="/images/map.png"
       />
 
-      <ClickLogger />
-      <Marker position={topLeft2latLong(553.6392, 1855.9875, 32.616, 49.968)}>
+      <HandleExfiltrator />
+      {/* <Marker position={topLeft2latLong(553.6392, 1855.9875, 32.616, 49.968)}>
         <Popup>Office Depot</Popup>
-      </Marker>
+      </Marker> */}
     </MapContainer>
   );
 };
 
-const mapMount = createRoot(document.getElementById("map"));
+const mountMap = (element) => {
+  const mapMount = createRoot(element);
+  mapMount.render(
+    <React.StrictMode>
+      <Map
+        style={{
+          flexBasis: "100%",
+          flexGrow: "1",
+        }}
+      />
+    </React.StrictMode>
+  );
 
-mapMount.render(
-  <React.StrictMode>
-    <Map
-      style={{
-        flexBasis: "100%",
-        flexGrow: "1",
-      }}
-    />
-  </React.StrictMode>
-);
+  return map;
+};
+
+window.mountMap = mountMap;

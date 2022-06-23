@@ -23,6 +23,15 @@ defmodule WhatWhereWhen.Repo.Migrations.CreateEvents do
         }
       )
 
+      add :location_id, references(:locations), null: false
+
+      add :sober_friendly, :integer,
+        check: %{
+          name: "sober_friendly_validate",
+          expr: "sober_friendly = 0 OR sober_friendly = 1 OR sober_friendly = 2"
+        },
+        null: false
+
       timestamps()
     end
 

@@ -7,6 +7,9 @@
     </div>
   <% end %>
 
+  <%= label f, :id_name, "ID Name" %>
+  <%= text_input f, :id_name %>
+
   <%= label f, :email %>
   <%= email_input f, :email, required: true %>
   <%= error_tag f, :email %>

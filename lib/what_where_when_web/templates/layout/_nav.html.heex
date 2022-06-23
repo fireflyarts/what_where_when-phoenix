@@ -4,4 +4,8 @@
   <%= link "What", to: Routes.event_category_path(@conn, :index) %>
   <%= link "Where", to: Routes.location_path(@conn, :index) %>
   <a href="#">When</a>
+
+  <%= if @current_person  do%>
+    <%= link "+", to: Routes.event_path(@conn, :new), class: "bg-green-200 font-semibold" %>
+  <% end %>
 </nav>

@@ -24,6 +24,8 @@ defmodule WhatWhereWhen.MixProject do
       {:jason, "~> 1.2"},
       # emoji encoding
       {:emojix, "~> 0.3.0"},
+      # time parsing
+      {:timex, "~> 3.0"},
 
       # DB/Data layer
       {:phoenix_ecto, "~> 4.4"},

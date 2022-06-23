@@ -12,6 +12,13 @@ body {
   min-height: -webkit-fill-available;
  }
 
+ .emoji-map-marker {
+  font-size: 20pt;
+  position: relative;
+  top: -10px;
+  left: -4px;
+ }
+
 body > header {
   @apply h-24 sm:h-28;
   @apply w-full mx-auto px-4 py-2 bg-blue-600 border-b border-blue-900 text-amber-200;
@@ -20,6 +27,10 @@ body > header {
 
 form {
   @apply flex flex-col max-w-lg;
+}
+
+fieldset {
+  @apply mb-2;
 }
 
 h1 {
@@ -35,7 +46,7 @@ h2 {
   @apply my-4 ring-2 p-2 bg-blue-400;
 }
 
-input {
+input, textarea, select {
   color: black;
 }
 
@@ -71,7 +82,7 @@ input {
 .invalid-feedback {
   color: #a94442;
   display: block;
-  margin: -1rem 0 2rem;
+  @apply bg-red-100;
 }
 
 /* LiveView specific classes for your customization */
