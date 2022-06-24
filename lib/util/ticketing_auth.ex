@@ -1,12 +1,12 @@
 defmodule Util.TicketingAuth do
   defstruct ~w[burn_name id_name email username where_camped timestamp]a
 
-  @baseuri URI.new!("https://volunteer.fireflyartscollective.org/site/eventauth")
+  @baseuri "https://volunteer.fireflyartscollective.org/site/eventauth"
 
   defp shared_secret, do: Application.get_env(:what_where_when, :ticketing_key)
 
   def outbound() do
-    @baseuri
+    URI.new!(@baseuri) 
     |> Map.put(
       :query,
       Timex.now()
