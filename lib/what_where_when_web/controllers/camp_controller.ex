@@ -2,7 +2,6 @@ defmodule WhatWhereWhenWeb.CampController do
   use WhatWhereWhenWeb, :controller
 
   alias WhatWhereWhen.ThemeCamps
-  alias WhatWhereWhen.ThemeCamps.Camp
 
   def index(conn, _params) do
     camps = ThemeCamps.list_camps()

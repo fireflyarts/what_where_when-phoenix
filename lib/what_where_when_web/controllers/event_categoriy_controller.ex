@@ -2,7 +2,6 @@ defmodule WhatWhereWhenWeb.EventCategoryController do
   use WhatWhereWhenWeb, :controller
 
   alias WhatWhereWhen.Events
-  alias WhatWhereWhen.Events.Category
 
   def index(conn, _params) do
     categories = Events.list_categories()
