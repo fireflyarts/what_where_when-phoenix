@@ -1,12 +1,7 @@
 defmodule Util.TicketingAuth do
   defstruct ~w[burn_name id_name email username where_camped timestamp]a
 
-  @baseuri %URI{
-    scheme: "https",
-    host: "volunteer.fireflyartscollective.org",
-    port: 443,
-    path: "/site/eventauth"
-  }
+  @baseuri URI.new!("https://volunteer.fireflyartscollective.org/site/eventauth")
 
   defp shared_secret, do: Application.get_env(:what_where_when, :ticketing_key)
 
