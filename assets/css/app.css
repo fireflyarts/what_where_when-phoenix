@@ -26,12 +26,19 @@ body > header {
 }
 
 form {
-  @apply flex flex-col max-w-lg;
+  @apply flex flex-col;
 }
 
 fieldset {
-  @apply mb-2;
+  @apply flex flex-col mb-2 max-w-full basis-full;
 }
+
+ fieldset>input[type="text"] {
+  @apply flex
+ }
+ fieldset>select {
+   @apply flex max-w-fit
+ }
 
 h1 {
   @apply text-2xl my-2;

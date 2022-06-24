@@ -63,7 +63,16 @@ defmodule WhatWhereWhen.Events do
   def create_event(attrs \\ %{}) do
     %Event{}
     |> Event.changeset(attrs)
+    |> handle_location(attrs)
     |> Repo.insert()
+  end
+
+  defp handle_location(cs, %{location_id: lid} = attrs) when lid != nil do
+    Event.existing_location_changeset(cs, attrs)
+  end
+
+  defp handle_location(cs, %{location: %{type: :event, lat: _lat, lng: _lng}} = attrs) do
+    Event.new_location_changeset(cs, attrs)
   end
 
   @doc """

@@ -31,24 +31,50 @@ defmodule WhatWhereWhen.Events.Event do
 
   @doc false
   def changeset(event, attrs) do
-    event
-    |> cast(attrs, [
-      :name,
-      :description,
-      :start_date,
-      :category_id,
-      :minimum_age,
-      :sober_friendly,
-      :owning_person_id,
-      :owning_camp_id
-    ])
-    |> validate_required([
-      :name,
-      :description,
-      :start_date,
-      :minimum_age,
-      :sober_friendly
-    ])
+    cs =
+      event
+      |> cast(attrs, [
+        :name,
+        :description,
+        :start_date,
+        :category_id,
+        :minimum_age,
+        :sober_friendly,
+        :owning_person_id,
+        :owning_camp_id
+      ])
+      |> validate_required([
+        :name,
+        :description,
+        :start_date,
+        :minimum_age,
+        :sober_friendly
+      ])
+      |> assoc_constraint(:category)
+      |> check_constraint(:owning_person_id, name: "owning_person_xor_camp")
+      |> check_constraint(:owning_camp_id, name: "owning_person_xor_camp")
+      |> validate_age_coherence()
+
+    if get_field(cs, :sober_friendly) == :no && get_field(cs, :minimum_age) < 18 do
+      add_error(
+        cs,
+        :sober_friendly,
+        "Call me old fashioned, but you should probably have some sober options for the straight-edge kids"
+      )
+    else
+      cs
+    end
+  end
+
+  def existing_location_changeset(cs, attrs) do
+    cs
+    |> cast(attrs, [:location_id])
+    |> assoc_constraint(:location)
+  end
+
+  def new_location_changeset(cs, attrs) do
+    cs
+    |> cast(attrs, [])
     |> cast_assoc(:location, required: true, with: &Location.changeset/2)
     |> validate_change(:location, fn
       :location, %Location{} ->
@@ -60,14 +86,12 @@ defmodule WhatWhereWhen.Events.Event do
       :location, %Ecto.Changeset{valid?: true} ->
         []
     end)
-    |> assoc_constraint(:category)
-    |> check_constraint(:owning_person_id, name: "owning_person_xor_camp")
-    |> check_constraint(:owning_camp_id, name: "owning_person_xor_camp")
-    |> validate_age_coherence()
   end
 
-  # we'll put off validating into the association until the basics are passing
-  defp validate_age_coherence(%{valid?: false} = cs), do: cs
+  # we'll put off validating into the association until the basics are passing - or at least cat is set
+  defp validate_age_coherence(%{valid?: false, data: %{category_id: nil}, changes: changed} = cs)
+       when not is_map_key(changed, :category_id),
+       do: cs
 
   defp validate_age_coherence(%Ecto.Changeset{changes: changed, data: %{category: cat}} = cs)
        when is_map_key(changed, :category_id) or is_struct(cat, Ecto.Association.NotLoaded) do

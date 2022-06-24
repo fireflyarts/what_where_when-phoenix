@@ -6,8 +6,11 @@
   <img class="my-2 object-cover object-top max-h-[25vh] min-w-full sm:object-scale-down sm:min-w-0 sm:max-h-72 sm:max-w-2/3 sm:float-left" src={Routes.static_path(@conn, "/images/homepage-fill-1.jpg")} />
 
 
+  <%= unless @current_person do %>
   <p class=""> Please select "Log in" to register your own!</p>
-
+  <% else %>
+  <p class=""> Or click the <span class="text-green-200">green</span> + to <%= link "submit your own!", to: Routes.event_path(@conn, :new), class: "underline text-green-300" %></p>
+  <% end %>
 
   <img class="my-2 object-cover object-bottom max-h-[25vh] min-w-full sm:min-w-0 sm:max-h-72 sm:max-w-2/3 sm:float-right" src={Routes.static_path(@conn, "/images/homepage-fill-2.jpg")} />
 

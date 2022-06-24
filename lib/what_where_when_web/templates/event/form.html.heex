@@ -38,13 +38,20 @@
   <% day_options = Date.range(~D[2022-06-29],~D[2022-07-04])
   |> Enum.map(fn (%Date{} = d) ->  [key: Calendar.strftime(d, "%A (%m/%d)"), value: Date.to_iso8601(d)]
   end) %>
+  <div class="flex flex-row items-center mb-1 justify-around">
+
   <%= select f, :start_date, options: day_options %>
+  <div class="flex flex-col items-center mb-1">
   <%= label :event, :all_day, "All day?" %> <%= checkbox :event, :all_day, value: (get_in(@conn.body_params, ["event", "all_day"]) == "true" || (List.last(@conn.path_info) == "show" && is_nil(@changeset.data.start_time))) %>
-  <div id="start_time_container">
-  <%= label :event, :start_time, "at" %> <%= time_input f, :start_time, value: ( get_in(@conn.body_params, ["event", "start_time"]) || (@changeset.data.start_time && NaiveDateTime.to_time(@changeset.data.start_time)))  %>
-  <%= error_tag f, :start_time %>
+  </div>
+  </div>
+
+  <div id="start_time_container" class="flex flex-row justify-evenly">
+  <%= label :event, :start_time, "at", class: "flex mr-3" %> <%= time_input f, :start_time, value: ( get_in(@conn.body_params, ["event", "start_time"]) || (@changeset.data.start_time && NaiveDateTime.to_time(@changeset.data.start_time)))  %>
+  <br/> <%= error_tag f, :start_time %>
 
   </div>
+
   </fieldset>
 
 
@@ -119,13 +126,17 @@
   <%= label f, :location_is_camp_false, "Somewhere else"  %>
   </div>
   <% end %>
-  <%= hidden_input f, :location_lat %>
-  <%= hidden_input f, :location_lng %>
+  <%= hidden_input :location, :lat %>
+  <%= hidden_input :location, :lng %>
 
   <div id="map" class={"min-h-[40vh] f hidden"}></div>
   <script phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/map.js")}></script>
   </fieldset>
 
+  <%= if @changeset.errors[:location] && @changeset.errors[:location] |> elem(1) |> Keyword.has_key?(:camp_location_not_set) do %>
+  <%= hidden_input :location, "is_for_camp", value: @current_person.camp.id %>
+
+  <% end %>
 
   <div>
     <%= submit "Manifest Activity!" %>
@@ -136,48 +147,15 @@
 (function () {
   var byId = document.getElementById.bind(document);
 
-  var lat = byId("event_location_lat");
-  var lng = byId("event_location_lng");
+  var lat = byId("location_lat");
+  var lng = byId("location_lng");
   var eventLocationMarker;
-
-  var afterMapMounted = function () {
-    var emoji = "😅";
-
-    var newMarker = function(latLong) {
-      eventLocationMarker = L.marker(latLong, {
-        icon: L.divIcon({
-          html: '<span class="emoji-map-marker">' + emoji + "</span>",
-        }),
-      }).on("click", function (e) {
-        e.target.remove();
-      });
-
-      return eventLocationMarker;
-    }
-
-    if (lat.value && lng.value) {
-      newMarker({
-        lat: lat.value, lng: lng.value
-      }).addTo(window.map);
-    }
-
-    window.map.on("click", function (e) {
-      if (eventLocationMarker) {
-        eventLocationMarker.remove();
-      }
-
-      lat.value = e.latlng.lat;
-      lng.value = e.latlng.lng;
-
-      newMarker(e.latlng).addTo(window.map);
-    });
-  };
 
   var checkbox_all_day = byId("event_all_day");
   var div_start_time = byId("start_time_container");
 
   var hide_time_if_all_day = function () {
-    div_start_time.hidden = checkbox_all_day.checked;
+    div_start_time.style.display = checkbox_all_day.checked ? "none" : "flex";
   };
 
   checkbox_all_day.addEventListener("change", hide_time_if_all_day);
@@ -221,8 +199,48 @@
     });
   };
 
+
   var location_is_camp = byId("event_location_is_camp_true");
-  if (location_is_camp) {
+  var prompting_for_camp_location = byId("location_is_for_camp");
+
+  var afterMapMounted = function () {
+    var emoji = "😅";
+
+    var newMarker = function(latLong) {
+      eventLocationMarker = L.marker(latLong, {
+        icon: L.divIcon({
+          html: '<span class="emoji-map-marker">' + emoji + "</span>",
+        }),
+      }).on("click", function (e) {
+        e.target.remove();
+      });
+
+      return eventLocationMarker;
+    }
+
+    if (lat.value && lng.value) {
+      newMarker({
+        lat: lat.value, lng: lng.value
+      }).addTo(window.map);
+    }
+
+    window.map.on("click", function (e) {
+      if (eventLocationMarker) {
+        eventLocationMarker.remove();
+      }
+
+      lat.value = e.latlng.lat;
+      lng.value = e.latlng.lng;
+
+      newMarker(e.latlng).addTo(window.map);
+    });
+
+    if (prompting_for_camp_location) {
+      map.setZoom(-1.5);
+      <%# zoom in more to start - so we are (slightly) likelier to get a more accurate location if we are gonna reuse it %>
+    }
+  };
+  if (location_is_camp && !prompting_for_camp_location) {
     var location_is_else = byId("event_location_is_camp_false");
 
     location_is_else.addEventListener("change", function (event) {
@@ -239,4 +257,6 @@
 })();
 </script>
 
-
+<%# <%= if @weird_flags[:camp_place] do
+  rigMap();
+  <% end %>

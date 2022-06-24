@@ -23,4 +23,18 @@ defmodule WhatWhereWhen.ThemeCamps.Camp do
     |> validate_required([:name, :primary_contact_id])
     |> assoc_constraint(:primary_contact)
   end
+
+  def location_changeset(camp, attrs) do
+    camp
+    |> WhatWhereWhen.Repo.preload(:location)
+    |> cast(attrs, [])
+    |> cast_assoc(:location, with: &Location.changeset/2)
+    |> validate_change(:location, fn
+      :location, %Ecto.Changeset{valid?: false} ->
+        [location: "Must be specified. Please click to place"]
+
+      :location, %Ecto.Changeset{valid?: true} ->
+        []
+    end)
+  end
 end

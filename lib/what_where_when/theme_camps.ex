@@ -79,6 +79,12 @@ defmodule WhatWhereWhen.ThemeCamps do
     |> Repo.update()
   end
 
+  def update_location!(%Camp{} = camp, attrs) do
+    camp
+    |> Camp.location_changeset(attrs)
+    |> Repo.update!()
+  end
+
   @doc """
   Deletes a camp.
 
