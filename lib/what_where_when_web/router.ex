@@ -46,14 +46,6 @@ defmodule WhatWhereWhenWeb.Router do
       post "/api/auth", WhatWhereWhenWeb.PersonSessionController, :create
 
       live_dashboard "/dashboard", metrics: WhatWhereWhenWeb.Telemetry
-
-      scope "/dev" do
-        # Enables the Swoosh mailbox preview in development.
-        #
-        # Note that preview only shows emails that were sent by the same
-        # node running the Phoenix server.
-        forward "/mailbox", Plug.Swoosh.MailboxPreview
-      end
     end
   end
 end

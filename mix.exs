@@ -37,9 +37,6 @@ defmodule WhatWhereWhen.MixProject do
       # testing
       {:floki, ">= 0.30.0", only: :test},
 
-      # email
-      {:swoosh, "~> 1.3"},
-
       # monitoring
       {:phoenix_live_dashboard, "~> 0.6", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},

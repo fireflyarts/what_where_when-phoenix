@@ -5,7 +5,7 @@ defmodule WhatWhereWhen.People do
 
   import Ecto.Query, warn: false
   alias WhatWhereWhen.Repo
-  alias WhatWhereWhen.People.{Person, PersonToken, PersonNotifier}
+  alias WhatWhereWhen.People.{Person, PersonToken}
 
   ## Database getters
 
