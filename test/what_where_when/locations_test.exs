@@ -12,7 +12,7 @@ defmodule WhatWhereWhen.LocationsTest do
 
     test "list_locations/0 returns all locations" do
       location = location_fixture()
-      assert [%Location{id: 1, type: :infra}, location] = Locations.list_locations()
+      assert [%Location{id: 1, type: :infra}, ^location] = Locations.list_locations()
     end
 
     test "get_location!/1 returns the location with given id" do

@@ -10,8 +10,7 @@ defmodule WhatWhereWhen.PeopleFixtures do
   def valid_person_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       id_name: "Alba Person",
-      email: unique_person_email(),
-      password: valid_person_password()
+      email: unique_person_email()
     })
   end
 

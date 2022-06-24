@@ -1,25 +1,25 @@
-<h1 class="text-xl mb-3">Log in</h1>
+<%= if Mix.env == :dev do %>
+
+<h1 class="text-xl mb-3">Force Log in</h1>
+
+<p> If you are seeing this page, you are (very hopefully) someone develpoing this app. </p>
+
+<p> It's gonna just ~unconditionally register and log you in.<br/> If it's an email you've used  that's already in the DB, you can just use that </p>
+<p> If not, you need to include at least ID name also. </p>
+
 
 <.form let={f} for={@conn} action={Routes.person_session_path(@conn, :create)} as={:person}>
-  <%= if @error_message do %>
-    <div class="alert alert-danger">
-      <p><%= @error_message %></p>
-    </div>
+
+  <%= for key <- Enum.reject(Map.keys(%Util.TicketingAuth{}), fn k ->
+    k == :__struct__ || k == :timestamp
+  end) do %>
+    <%= label f, key %>
+    <%= text_input f, key %>
   <% end %>
-
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
-
-  <%= label f, :password %>
-  <%= password_input f, :password, required: true %>
-
 
   <div>
     <%= submit "Log in"%>
   </div>
 </.form>
 
-<p class="flex flex-col children:w-full children:h-10 children:m-2">
-  <%= link "Forgot your password?", to: Routes.person_reset_password_path(@conn, :new) %>
-  <%= link "Register", to: Routes.person_registration_path(@conn, :new) %>
-</p>
+<% end %>

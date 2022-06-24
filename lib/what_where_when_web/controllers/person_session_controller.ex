@@ -2,20 +2,52 @@ defmodule WhatWhereWhenWeb.PersonSessionController do
   use WhatWhereWhenWeb, :controller
 
   alias WhatWhereWhen.People
+  alias WhatWhereWhen.People.Person
   alias WhatWhereWhenWeb.PersonAuth
 
   def new(conn, _params) do
-    render(conn, "new.html", error_message: nil)
+    if Mix.env() == :dev do
+      render(conn, "new.html", error_message: nil)
+    else
+      redirect(conn, external: Util.TicketingAuth.outbound())
+    end
   end
 
-  def create(conn, %{"person" => person_params}) do
-    %{"email" => email, "password" => password} = person_params
+  def create(conn, params) do
+    with :prod <- Mix.env(),
+         auth <- Util.TicketingAuth.inbound_params(params),
+         true <- auth[:signature_valid] && abs(auth[:delta]) < 60 do
+      payload = auth[:payload]
 
-    if person = People.get_person_by_email_and_password(email, password) do
-      PersonAuth.log_in_person(conn, person, person_params)
+      case People.get_person_by_email(payload.email) do
+        nil ->
+          {:ok, person} = People.register_person(Map.from_struct(payload))
+          person
+
+        %Person{} = person ->
+          {:ok, person} = People.change_person(person, Map.from_struct(payload))
+          person
+      end
+      |> then(&PersonAuth.log_in_person(conn, &1))
     else
-      # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
-      render(conn, "new.html", error_message: "Invalid email or password")
+      mix_env when mix_env == :dev or mix_env == :test ->
+        case People.get_person_by_email(params["person"]["email"]) do
+          nil ->
+            IO.puts("User not found in dev/test log in, so forcing registration")
+            {tag, person_or_cs} = People.register_person(params["person"])
+            IO.inspect({tag, person_or_cs})
+
+            person_or_cs
+
+          person ->
+            person
+        end
+        |> then(&PersonAuth.log_in_person(conn, &1))
+
+      other_for_example_auth_failure ->
+        IO.puts("Auth failure: ")
+        IO.inspect(other_for_example_auth_failure)
+        redirect(conn, to: "/", error_message: "Invalid auth")
     end
   end
 

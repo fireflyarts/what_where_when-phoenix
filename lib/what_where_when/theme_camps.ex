@@ -39,6 +39,10 @@ defmodule WhatWhereWhen.ThemeCamps do
 
   def get_camp_with_members!(id), do: Repo.get!(Camp, id) |> Repo.preload(:members)
 
+  def get_camp_from_name(name) do
+    Repo.one(from c in Camp, where: c.name == ^name)
+  end
+
   @doc """
   Creates a camp.
 

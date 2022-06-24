@@ -7,6 +7,11 @@ import Config
 # any compile-time configuration in here, as it won't be applied.
 # The block below contains prod specific runtime configuration.
 
+if config_env() != :test do
+  config :what_where_when,
+    ticketing_key: System.fetch_env!("TICKETING_KEY")
+end
+
 if config_env() == :prod do
   # === Frontend/View layer ===
   # Oops: it's too late (for the most part.)
@@ -14,7 +19,7 @@ if config_env() == :prod do
   # (Serving/)
   # === Routing/auth/controller layer ==
 
-  host = System.get_env("PHX_HOST") || "firefly.day"
+  host = System.get_env("PHX_HOST") || "my.firefly.day"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   # The secret key base is used to sign/encrypt cookies and other secrets.

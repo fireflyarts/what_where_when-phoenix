@@ -1,5 +1,8 @@
 import Config
 
+config :what_where_when,
+  ticketing_key: "Not the real thing, but tests just want not null"
+
 # === Frontend/View layer ===
 
 # currently there is nothing special done for testing
