@@ -37,7 +37,7 @@ config :phoenix, :plug_init_mode, :runtime
 config :what_where_when, WhatWhereWhen.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  hostname: if(System.get_env("CI"), do: "postgres", else: "localhost"),
   database: "what_where_when_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
