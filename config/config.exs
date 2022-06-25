@@ -3,6 +3,10 @@ import Config
 # META: I have organized this file in frontend ("top of stack") to backend ("bottom of stack") order (like the mix.exs deps function)
 # Insofar as configs are namespaced, their order should not matter much in practice (within a file, file load order will still determine e.g. per env overrides)
 
+# === the outside the computer entirely layer ==
+
+config :what_where_when, event_dates: Date.range(~D[2022-06-29], ~D[2022-07-04])
+
 # === Frontend/View layer ===
 
 # Configure esbuild for javascript management

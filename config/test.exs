@@ -35,7 +35,10 @@ config :phoenix, :plug_init_mode, :runtime
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :what_where_when, WhatWhereWhen.Repo,
-  database: "db/what_where_when_test#{System.get_env("MIX_TEST_PARTITION")}",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  database: "what_where_when_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 

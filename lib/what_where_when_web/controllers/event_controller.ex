@@ -6,7 +6,9 @@ defmodule WhatWhereWhenWeb.EventController do
 
   import Ecto.Changeset
 
-  def show(_conn, _event), do: nil
+  def show(conn, %{"id" => id}) do
+    render(conn, "show.html", event: Events.get_event!(id))
+  end
 
   def new(conn, _params) do
     cs = Events.change_event(%Event{})

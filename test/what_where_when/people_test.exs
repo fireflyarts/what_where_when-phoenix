@@ -40,13 +40,14 @@ defmodule WhatWhereWhen.PeopleTest do
     end
 
     test "validates email uniqueness" do
-      %{email: email} = p = person_fixture()
-      {:error, changeset} = People.register_person(Map.from_struct(p))
+      %{email: email} = person_fixture()
+      {:error, changeset} = People.register_person(%{email: email, id_name: "Different Person"})
+
       assert "has already been taken" in errors_on(changeset).email
 
       # Now try with the upper cased email too, to check that email case is ignored.
       {:error, changeset} =
-        People.register_person(%{email: String.upcase(email), id_name: p.id_name})
+        People.register_person(%{email: String.upcase(email), id_name: "Different Person"})
 
       assert "has already been taken" in errors_on(changeset).email
     end

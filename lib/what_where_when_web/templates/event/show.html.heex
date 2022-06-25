@@ -1,0 +1,38 @@
+<div class="max-w-xl">
+  <h1>We got it!</h1>
+
+  <p>You have succesfully submitted your event:</p>
+
+  <hr />
+
+  <h2 class="text-xl"><%= @event.name %></h2>
+
+  <p class="mb-6">
+    <strong>Date:</strong> <%= Timex.format!(@event.start_date, "{WDfull},
+    {Mfull} {D}") %> <br/><strong>Time:</strong> <%= if @event.start_time, do:
+    Timex.format!(NaiveDateTime.to_time(@event.start_time), "{h12}:{m} {am}"),
+    else: "All Day"%>
+  </p>
+
+  <h3 class="text-lg">Description</h3>
+
+  <p><%= @event.description %></p>
+
+  <p class="mt-4 italic text-s">We've also saved the other information you gave</p>
+  <hr class="mb-12" />
+
+  <div class="text-yellow-100">
+    <p>
+      Da<em>www</em>n is still finishing up the events browsing/seraching functions,<br/> but
+      when they're ready, this'll be in there! <br />(and you'll also be able to
+      tweak stuff at that time)
+    </p>
+    <br />
+    <p>
+      If you <em><strong>urgently!!</strong></em> need to remove it / changes something,<br/> please
+      <a class="underline" href="https://github.com/fireflyarts/what_where_when-phoenix/issues/new">file an issue on GitHub</a> with your full email address and the event name.
+    </p>
+  </div>
+
+  <p class="mt-6">See you in the woods!</p>
+</div>

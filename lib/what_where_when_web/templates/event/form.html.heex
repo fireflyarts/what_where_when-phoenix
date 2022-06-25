@@ -35,7 +35,7 @@
 
   <fieldset>
   <%= label f, :start_date, "It'll be on..." %><br />
-  <% day_options = Date.range(~D[2022-06-29],~D[2022-07-04])
+  <% day_options = Application.get_env(:what_where_when, :event_dates)
   |> Enum.map(fn (%Date{} = d) ->  [key: Calendar.strftime(d, "%A (%m/%d)"), value: Date.to_iso8601(d)]
   end) %>
   <div class="flex flex-row items-center mb-1 justify-around">

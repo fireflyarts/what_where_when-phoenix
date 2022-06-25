@@ -141,7 +141,6 @@ defmodule WhatWhereWhenWeb.PersonAuthTest do
       conn = conn |> fetch_flash() |> PersonAuth.require_authenticated_person([])
       assert conn.halted
       assert redirected_to(conn) == Routes.person_session_path(conn, :new)
-      assert get_flash(conn, :error) == "You must log in to access this page."
     end
 
     test "stores the path to redirect to on GET", %{conn: conn} do

@@ -30,7 +30,7 @@ defmodule WhatWhereWhen.MixProject do
       # DB/Data layer
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
-      {:ecto_sqlite3, "~> 0.7.5"},
+      {:postgrex, "~> 0.16"},
 
       # Operations layer
 
