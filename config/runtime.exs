@@ -7,9 +7,12 @@ import Config
 # any compile-time configuration in here, as it won't be applied.
 # The block below contains prod specific runtime configuration.
 
-if config_env() != :test do
+if config_env() == :prod do
   config :what_where_when,
     ticketing_key: System.fetch_env!("TICKETING_KEY")
+else
+  config :what_where_when,
+    ticketing_key: "Not actually used in dev or test so it doesn't matter, but can't be nil"
 end
 
 if config_env() == :prod do

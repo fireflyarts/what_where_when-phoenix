@@ -32,9 +32,9 @@ defmodule WhatWhereWhenWeb.Router do
   scope "/", WhatWhereWhenWeb do
     pipe_through [:browser, :require_authenticated_person]
 
-    resources "/who/camps", CampController
+    resources "/who/camps", CampController, only: [:show]
 
-    resources "/events", EventController, only: [:new, :create]
+    resources "/events", EventController, only: [:new, :create, :show]
   end
 
   if Mix.env() === :dev do
@@ -44,7 +44,6 @@ defmodule WhatWhereWhenWeb.Router do
       pipe_through :browser
 
       post "/api/auth", WhatWhereWhenWeb.PersonSessionController, :create
-
       live_dashboard "/dashboard", metrics: WhatWhereWhenWeb.Telemetry
     end
   end

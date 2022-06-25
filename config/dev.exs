@@ -48,7 +48,9 @@ config :phoenix, :plug_init_mode, :runtime
 # == DB/Data Layer =
 
 config :what_where_when, WhatWhereWhen.Repo,
-  database: "db/what_where_when_dev",
+  username: "postgres",
+  database: "what_where_when_dev",
+  hostname: "localhost",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
