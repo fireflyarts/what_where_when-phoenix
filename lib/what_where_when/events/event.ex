@@ -145,12 +145,12 @@ defimpl Jason.Encoder, for: WhatWhereWhen.Events.Event do
         "id" => Jason.encode!(id),
         "title" => n,
         "allDay" => allDay,
-        "start" => if(allDay, do: Date.to_iso8601(sd), else: NaiveDateTime.to_iso8601(st)),
-        "end" =>
-          if(allDay,
-            do: Date.to_iso8601(sd),
-            else: Timex.add(st, Timex.Duration.from_hours(1)) |> NaiveDateTime.to_iso8601()
-          )
+        "start" => if(allDay, do: Date.to_iso8601(sd), else: NaiveDateTime.to_iso8601(st))
+        # "end" =>
+        #   if(allDay,
+        #     do: Date.to_iso8601(sd),
+        #     else: Timex.add(st, Timex.Duration.from_hours(1)) |> NaiveDateTime.to_iso8601()
+        #   )
       },
       opts
     )
