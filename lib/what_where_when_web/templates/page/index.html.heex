@@ -1,24 +1,32 @@
-<section class="sm:inline-grid sm:grid-flow-row sm:grid-cols-2 sm:items-center sm:place-items-center sm:gap-x-3 xl:gap-x-36 sm:mx-3">
+<section
+  class="sm:inline-grid sm:grid-flow-row sm:grid-cols-2 sm:items-center sm:place-items-center sm:gap-x-3 xl:gap-x-36 sm:mx-3">
   <h1 class="sm:col-span-2 sm:text-center">Welcome!</h1>
 
-  <p class="sm:col-span-2 alert alert-danger" role="alert">
-  <span class="text-xl">I know it's not done</span><br/>
-  This guide is currently open for <%= link "submissions", to: Routes.event_path(@conn, :new), class: "underline" %>, but not (necessarily) browsing quite yet. <br/>I'll remove this banner when I think it's good to go<br/><span class="text-xs"> I'm sorry. I, am a first time attendee of the event who agreed to do this pretty last minute</span><br/><span class="text-[0.6rem]">(and am being <a href="https://github.com/fireflyarts/what_where_when-phoenix">a tryhard</a> about it. Hopefully it'll be reusable and so "ready to go" next year)</span></p>
+  <p class="sm:col-span-2 alert alert-warning" role="alert">
+    <span class="text-xl">it's not done (but more than it was)</span><br />
+    This guide is currently open for <%= link "submissions", to: Routes.event_path(@conn, :new), class: "underline" %>,
+    and <a href="/when" class="underline">basic browsing</a>. <br class="mb-2" />
 
-  <p> Please select "What?", "Where?", or "When?" above to find events. </p>
+    <span class="text-xs">
+      There is more to come & I'll remove this when I think it's final form (for 2022)<br />
+      If you'd like to follow along with changes or <a class="underline" href="https://github.com/fireflyarts/what_where_when-phoenix/issues/new/choose">submit issues</a>, the repo is on GitHub <a class="underline" href="https://github.com/fireflyarts/what_where_when-phoenix">here</a>
+    </span>
+  </p>
 
-  <img class="my-2 object-cover object-top max-h-[25vh] min-w-full sm:object-scale-down sm:min-w-0 sm:max-h-72 sm:max-w-2/3 sm:float-left" src={Routes.static_path(@conn, "/images/homepage-fill-1.jpg")} />
+  <p>Please select "What?", "Where?", or "When?" above to find events.</p>
 
-
+  <img class="my-2 object-cover object-top max-h-[25vh] min-w-full
+  sm:object-scale-down sm:min-w-0 sm:max-h-72 sm:max-w-2/3 sm:float-left"
+  src={Routes.static_path(@conn, "/images/homepage-fill-1.jpg")} />
   <%= unless @current_person do %>
-  <p class=""> Please select "Log in" to register your own!</p>
+  <p class="">Please select "Log in" to register your own!</p>
   <% else %>
-  <p class=""> Or click the <span class="text-green-200">green</span> + to <%= link "submit your own!", to: Routes.event_path(@conn, :new), class: "underline text-green-300" %></p>
-  <% end %>
-
-  <img class="my-2 object-cover object-bottom max-h-[25vh] min-w-full sm:min-w-0 sm:max-h-72 sm:max-w-2/3 sm:float-right" src={Routes.static_path(@conn, "/images/homepage-fill-2.jpg")} />
-
-
-
+  <p class="">
+    Or click the <span class="text-green-200">green</span> + to <%= link "submit
+    your own!", to: Routes.event_path(@conn, :new), class: "underline
+    text-green-300" %>
+  </p>
+  <% end %> <img class="my-2 object-cover object-bottom max-h-[25vh] min-w-full
+  sm:min-w-0 sm:max-h-72 sm:max-w-2/3 sm:float-right"
+  src={Routes.static_path(@conn, "/images/homepage-fill-2.jpg")} />
 </section>
-
