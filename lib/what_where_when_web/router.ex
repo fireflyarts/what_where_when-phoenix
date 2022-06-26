@@ -19,12 +19,6 @@ defmodule WhatWhereWhenWeb.Router do
     plug :fetch_current_person
   end
 
-  scope "/api", WhatWhereWhenWeb do
-    pipe_through :api
-
-    get "/event/categories", EventCategoryController, :index
-    get "/events", EventController, :index
-  end
   scope "/", WhatWhereWhenWeb do
     pipe_through :browser
 
@@ -34,6 +28,7 @@ defmodule WhatWhereWhenWeb.Router do
 
     get "/what", EventCategoryController, :index
     get "/where", LocationController, :index
+    get "/when", EventController, :index
   end
 
   scope "/", WhatWhereWhenWeb do
@@ -47,6 +42,13 @@ defmodule WhatWhereWhenWeb.Router do
     resources "/who/camps", CampController, only: [:show]
 
     resources "/events", EventController, only: [:new, :create, :show]
+  end
+
+  scope "/api", WhatWhereWhenWeb do
+    pipe_through :api
+
+    get "/event/categories", EventCategoryController, :index
+    get "/events", EventController, :index
   end
 
   if Mix.env() === :dev do

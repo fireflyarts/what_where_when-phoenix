@@ -32,5 +32,7 @@ what_where_when-*.tar
 npm-debug.log
 /assets/node_modules/
 
-priv/repo/seeds_camps.exs
-priv/repo/seeds_people.exs
+# potentially private data that may still be good to have in working copy
+/priv/repo/seeds_camps.exs
+/priv/repo/seeds_people.exs
+/priv/repo/backups
