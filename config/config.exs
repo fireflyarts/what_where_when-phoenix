@@ -5,7 +5,8 @@ import Config
 
 # === the outside the computer entirely layer ==
 
-config :what_where_when, event_dates: Date.range(~D[2022-06-29], ~D[2022-07-04])
+config :what_where_when, firefly_start_date: ~D[2022-06-29]
+config :what_where_when, firefly_end_date: ~D[2022-07-04]
 
 # === Frontend/View layer ===
 

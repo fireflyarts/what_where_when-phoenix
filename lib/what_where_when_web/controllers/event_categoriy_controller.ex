@@ -5,6 +5,18 @@ defmodule WhatWhereWhenWeb.EventCategoryController do
 
   def index(conn, _params) do
     categories = Events.list_categories()
+
+    case get_format(conn) do
+      "json" ->
+        json(conn, categories)
+
+      _ ->
+        render(conn, "index.html", categories: categories)
+    end
+  end
+
+  def index(conn, _params) do
+    categories = Events.list_categories()
     render(conn, "index.html", categories: categories)
   end
 

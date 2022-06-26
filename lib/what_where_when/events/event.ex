@@ -130,3 +130,29 @@ defmodule WhatWhereWhen.Events.Event do
     Repo.one!(from c in Category, where: c.id == ^category_id, select: {c.name, c.minimum_age})
   end
 end
+
+defimpl Jason.Encoder, for: WhatWhereWhen.Events.Event do
+  def encode(
+        %WhatWhereWhen.Events.Event{id: id, start_date: sd, start_time: st, name: n},
+        opts
+      ) do
+    # hewing to the https://fullcalendar.io/docs/event-object
+
+    allDay = st == nil
+
+    Jason.Encode.map(
+      %{
+        "id" => Jason.encode!(id),
+        "title" => n,
+        "allDay" => allDay,
+        "start" => if(allDay, do: Date.to_iso8601(sd), else: NaiveDateTime.to_iso8601(st)),
+        "end" =>
+          if(allDay,
+            do: Date.to_iso8601(sd),
+            else: Timex.add(st, Timex.Duration.from_hours(1)) |> NaiveDateTime.to_iso8601()
+          )
+      },
+      opts
+    )
+  end
+end
