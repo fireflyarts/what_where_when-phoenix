@@ -3,6 +3,8 @@ defmodule WhatWhereWhen.Events.Category do
   import Ecto.Changeset
   alias Util.Ecto.Emoji
 
+  @derive {Jason.Encoder, only: ~w[name minimum_age emoji]a}
+
   schema "event_categories" do
     field :name
     field :emoji, Emoji

@@ -6,6 +6,18 @@ defmodule WhatWhereWhenWeb.EventController do
 
   import Ecto.Changeset
 
+  def index(conn, _) do
+    events = Events.list_events()
+
+    case get_format(conn) do
+      "json" ->
+        json(conn, events)
+
+      _ ->
+        render(conn, "index.html", events: events)
+    end
+  end
+
   def show(conn, %{"id" => id}) do
     render(conn, "show.html", event: Events.get_event!(id))
   end

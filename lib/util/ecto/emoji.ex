@@ -1,3 +1,6 @@
+require Protocol
+Protocol.derive(Jason.Encoder, Emojix.Emoji, only: [:description, :unicode])
+
 defmodule Util.Ecto.Emoji do
   use Ecto.Type
 
@@ -19,6 +22,7 @@ defmodule Util.Ecto.Emoji do
   @type t() :: Emojix.Emoji.t()
 
   @spec type() :: colon_infixed_binary()
+
   def type, do: :string
 
   @spec cast(colon_infixed_binary() | String.grapheme()) :: {:ok, t()} | :error
