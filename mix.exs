@@ -34,6 +34,7 @@ defmodule WhatWhereWhen.MixProject do
 
       # Operations layer
       {:sentry, "~> 8.0"},
+      {:map_diff, "~> 1.3.4"},
 
       # testing
       {:floki, ">= 0.30.0", only: :test},
