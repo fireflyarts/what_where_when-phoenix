@@ -3,5 +3,5 @@
 
 <h2>Events They're Hosting</h2>
 
-<%= render(EventView, "_calendar.html", events: @events, action: :show ) %>
+<%= render(EventView, "_calendar.html", events: @events, route: :event_path , action: :show ) %>
 

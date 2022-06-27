@@ -9,7 +9,7 @@
 
 <h2>Events You're Hosting</h2>
 
-<%= render(EventView, "_calendar.html", events: @events, action: :edit ) %>
+<%= render(EventView, "_calendar.html", events: @events, route: :person_event_path, action: :show ) %>
 
 
 

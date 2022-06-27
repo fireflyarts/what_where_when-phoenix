@@ -15,22 +15,31 @@
   </fieldset>
 
 
-  <%= if @current_person.camp do %>
   <fieldset>
+  <% event_owner_type_selector  = fn -> %>
+    <div class="flex flex-row items-center mb-1">
+        <%= radio_button f, :owner_type, "person", class: "mr-2", checked: String.starts_with?(@action, Routes.person_path(@conn, :show))  %>
+        <%= label f, :owner_type_person, "Me, #{WhatWhereWhen.People.Person.name(@current_person)}" %>
+    </div>
+    <%= if @current_person.camp do %>
+      <div class="flex flex-row items-center mb-1">
+        <%= radio_button f, :owner_type, "camp", class: "mr-2" %>
+        <%= label f, :owner_type_camp, "My camp, #{@current_person.camp.name}" %>
+      </div>
+    <% end  %>
+  <% end %>
+
   <%= label f, :owner_type, "It's hosted by" %>
-  <div class="flex flex-row items-center mb-1">
-  <%= radio_button f, :owner_type, "person", class: "mr-2" %>
-  <%= label f, :owner_type_person, "Me, #{WhatWhereWhen.People.Person.name(@current_person)}" %>
-  </div>
-  <div class="flex flex-row items-center mb-1">
-  <%= radio_button f, :owner_type, "camp", class: "mr-2" %>
-  <%= label f, :owner_type_camp, "My camp, #{@current_person.camp.name}" %>
-  </div>
   <%= error_tag f, :owner_type %>
-  </fieldset>
+  <%# You can give an event away to your camp as an edit, but you cannot take it back %>
+  <%= if @action == Routes.event_path(@conn, :create) || assigns[:event_owner_type] == :person do %>
+      <%= event_owner_type_selector.() %>
   <% else %>
-  <%= hidden_input f, :owner_type, value: "person" %>
+    <%= case @event_owner_type do %>
+      <%  :camp -> %> <span>My camp, <%= @current_person.camp.name %></span>
+    <% end %>
   <%  end  %>
+  </fieldset>
 
 
   <fieldset>
@@ -42,7 +51,7 @@
 
   <%= select f, :start_date, options: day_options %>
   <div class="flex flex-col items-center mb-1">
-  <%= label :event, :all_day, "All day?" %> <%= checkbox :event, :all_day, value: (get_in(@conn.body_params, ["event", "all_day"]) == "true" || (List.last(@conn.path_info) == "show" && is_nil(@changeset.data.start_time))) %>
+  <%= label :event, :all_day, "All day?" %> <%= checkbox :event, :all_day, value: @action != Routes.event_path(@conn, :create) && @changeset.data.start_time == nil %>
   </div>
   </div>
 
@@ -120,12 +129,12 @@
   <%= label f, :location, "Alright sounds good. One last thing: Where is it gonna be?" %>
   <%= if @current_person.camp do %>
   <div class="flex flex-row items-center mb-1">
-  <%= radio_button f, :location_is_camp, "true", class: "mr-2" %>
+  <%= radio_button f, :location_is_camp, "true", class: "mr-2", checked: is_map_key(@changeset.data.location, :type) && @changeset.data.location.type == :camp %>
   <%= label f, :location_is_camp_true, @current_person.camp.name %>
   </div>
   <div class="flex flex-row items-center mb-1">
   <%= radio_button f, :location_is_camp, "false", class: "mr-2" %>
-  <%= label f, :location_is_camp_false, "Somewhere else"  %>
+  <%= label f, :location_is_camp_false, "Somewhere else", checked: is_map_key(@changeset.data.location, :type) && @changeset.data.location.type == :event  %>
   </div>
   <% end %>
   <%= hidden_input l, :lat %>

@@ -34,12 +34,12 @@ defmodule WhatWhereWhen.Events do
     Repo.all(Event)
   end
 
-  def as_json(event_or_events, action \\ :show)
+  def as_json(event_or_events, route, action)
 
-  def as_json(events, action) when is_list(events) do
+  def as_json(events, route, action) when is_list(events) do
     "[" <>
       (events
-       |> Enum.map(&as_json(&1, action))
+       |> Enum.map(&as_json(&1, route, action))
        |> Enum.join(",")) <>
       "]"
   end
@@ -48,8 +48,7 @@ defmodule WhatWhereWhen.Events do
   Inject url param for given action into json encoding
   ~lisp style for probably unnecessary performance (w/ Erlang/Elixir's cons-cell lists)
   """
-  def as_json(%Event{id: id} = e, action)
-      when action == :show or action == :edit do
+  def as_json(%Event{id: id} = e, route, action) do
     # remove the trailing },
     [?} | first_part_reversed] = Jason.encode_to_iodata!(e) |> :lists.reverse()
     first_part = :lists.reverse(first_part_reversed)
@@ -57,7 +56,7 @@ defmodule WhatWhereWhen.Events do
     [
       first_part,
       ~c[,"url": "],
-      WhatWhereWhenWeb.Router.Helpers.event_path(WhatWhereWhenWeb.Endpoint, action, id),
+      apply(WhatWhereWhenWeb.Router.Helpers, route, [WhatWhereWhenWeb.Endpoint, action, id]),
       ?",
       ?}
     ]

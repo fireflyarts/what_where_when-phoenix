@@ -6,6 +6,11 @@ defmodule WhatWhereWhenWeb.EventView do
   alias WhatWhereWhenWeb.EventCategoryView
 
   def render("index.html", assigns) do
-    render("_calendar.html", Map.put(assigns, :action, :show))
+    render(
+      "_calendar.html",
+      assigns
+      |> Map.put(:route, :event_path)
+      |> Map.put(:action, :show)
+    )
   end
 end

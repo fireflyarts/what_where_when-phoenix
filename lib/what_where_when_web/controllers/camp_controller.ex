@@ -10,8 +10,13 @@ defmodule WhatWhereWhenWeb.CampController do
   end
 
   def show(conn, %{"id" => id}) do
-    camp = ThemeCamps.get_camp_with_members!(id)
+    camp = ThemeCamps.get_camp!(id)
     events = Events.get_owned_by_camp!(camp)
+
+    if conn.assigns.current_person.camp && conn.assigns.current_person.camp.id == camp.id do
+      true
+    end
+
     render(conn, "show.html", camp: camp, events: events)
   end
 

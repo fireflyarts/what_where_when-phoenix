@@ -3,6 +3,8 @@ defmodule WhatWhereWhenWeb.EventController do
 
   alias WhatWhereWhen.Events
   alias WhatWhereWhen.Events.Event
+  alias WhatWhereWhen.People.Person
+  alias WhatWhereWhen.ThemeCamps.Camp
 
   import Ecto.Changeset
 
@@ -31,46 +33,46 @@ defmodule WhatWhereWhenWeb.EventController do
 
   def edit(conn, %{"id" => id}) do
     e = Events.get_event!(id)
+    owner = Event.owner(e)
 
-    if e.owning_person_id != conn.assigns.current_person.id do
-      Plug.Conn.put_status(conn, :unauthorized)
-    else
-      render(conn, "edit.html",
-        event: e,
-        changeset: Event.changeset(e, %{}),
-        categories: Events.list_categories()
-      )
-    end
-  end
-
-  def update(conn, %{"id" => id, "event" => event_params}) do
-    e = Events.get_event!(id)
-
-    if e.owning_person_id != conn.assigns.current_person.id do
-      Plug.Conn.put_status(conn, :unauthorized)
-    else
-      cs = upsert(conn, e, event_params)
-
-      case WhatWhereWhen.Repo.update(cs) do
-        {:ok, event} ->
+    conn =
+      case owner do
+        %Person{id: pid} when pid == conn.assigns.current_person.id ->
           conn
-          |> put_flash(:info, "Event updated successfully.")
-          |> redirect(to: Routes.event_path(conn, :show, event))
+          |> assign(:event_owner_type, :person)
+          |> assign(:action, Routes.person_event_path(conn, :update, id))
 
-        {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "edit.html",
-            event: e,
-            changeset: changeset,
-            categories: Events.list_categories()
+        %Camp{id: cid} when cid == conn.assigns.current_person.camp.id ->
+          conn
+          |> assign(:event_owner_type, :camp)
+          |> assign(
+            :action,
+            Routes.camp_event_path(conn, :update, cid, id)
           )
+
+        _ ->
+          Plug.Conn.put_status(conn, :unauthorized)
       end
-    end
+
+    render(conn, "edit.html",
+      event: e,
+      changeset: Event.changeset(e, %{}),
+      categories: Events.list_categories()
+    )
   end
 
   def create(conn, %{"event" => event_params}) do
-    cs = upsert(conn, %Event{}, event_params)
-
-    case WhatWhereWhen.Repo.insert(cs) do
+    %Event{}
+    |> Event.changeset(event_params)
+    |> handle_owner(conn, :create, event_params["owner_type"])
+    |> handle_date_and_maybe_time(Map.take(event_params, ~w[all_day start_date start_time]))
+    |> handle_location(
+      event_params["location_is_camp"],
+      conn.assigns.current_person.camp,
+      event_params["location"]
+    )
+    |> WhatWhereWhen.Repo.insert()
+    |> then(fn
       {:ok, event} ->
         conn
         |> put_flash(:info, "Event created successfully.")
@@ -81,35 +83,76 @@ defmodule WhatWhereWhenWeb.EventController do
           changeset: changeset,
           categories: Events.list_categories()
         )
+    end)
+  end
+
+  def update(conn, %{"id" => id, "event" => event_params}) do
+    event = Events.get_event!(id)
+    owned_by_person = event.owning_person_id == conn.assigns.current_person.id
+
+    owned_by_persons_camp =
+      !owned_by_person && event.owning_camp_id == conn.assigns.current_person.camp.id
+
+    unless owned_by_person || owned_by_persons_camp do
+      conn
+      |> put_flash(:error, "You don't own that event (and therefore can't edit it!)")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+    else
+      event
+      |> Event.changeset(event_params)
+      |> handle_owner(conn, :update, event_params["owner_type"])
+      |> handle_date_and_maybe_time(Map.take(event_params, ~w[all_day start_date start_time]))
+      |> handle_location(
+        event_params["location_is_camp"],
+        conn.assigns.current_person.camp,
+        event_params["location"]
+      )
+      |> WhatWhereWhen.Repo.update()
+      |> then(fn
+        {:ok, event} ->
+          conn
+          |> put_flash(:info, "Event updated successfully.")
+          |> redirect(to: Routes.event_path(conn, :show, event))
+
+        {:error, changeset} ->
+          render(conn, "edit.html",
+            changeset: changeset,
+            categories: Events.list_categories()
+          )
+      end)
     end
   end
 
-  defp upsert(conn, start, event_params) do
-    Event.changeset(start, event_params)
-    |> handle_owner(conn, event_params["owner_type"])
-    |> handle_date_and_maybe_time(Map.take(event_params, ~w[all_day start_date start_time]))
-    |> handle_location(
-      event_params["location_is_camp"],
-      conn.assigns.current_person.camp,
-      event_params["location"]
-    )
-  end
+  defp handle_owner(cs, conn, action, owner_type)
 
-  defp handle_owner(cs, _conn, nil) do
+  defp handle_owner(cs, _conn, :create, nil) do
     cs
     |> add_error(:owner_type, "Event needs to be (at least listed as) hosted by somebody",
       validation: :required
     )
   end
 
-  defp handle_owner(cs, conn, "person") do
+  defp handle_owner(cs, _conn, :update, nil), do: cs
+
+  defp handle_owner(cs, conn, _, "camp") do
+    cs
+    |> put_change(:owning_person_id, nil)
+    |> put_change(:owning_camp_id, conn.assigns.current_person.camp_id)
+  end
+
+  defp handle_owner(cs, conn, :create, "person") do
     cs
     |> put_change(:owning_person_id, conn.assigns.current_person.id)
   end
 
-  defp handle_owner(cs, conn, "camp") do
-    cs
-    |> put_change(:owning_camp_id, conn.assigns.current_person.camp_id)
+  defp handle_owner(cs, conn, :update, "person") do
+    if cs.data.owning_camp_id != nil do
+      add_error(cs, :owner_type, "You can't reclaim an event away from a camp")
+    else
+      # TODO: support transferring from one person to another
+      put_change(cs, :owning_person_id, conn.assigns.current_person.id)
+    end
   end
 
   defp handle_date_and_maybe_time(cs, %{"all_day" => "true"}) do

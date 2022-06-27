@@ -33,12 +33,17 @@
   <strong>Hosted by:</strong> <%= case Event.owner(@event) do %>
     <% %WhatWhereWhen.People.Person{} = p -> %>
       <%= if(@current_person && @current_person.id == p.id) do %>
-        You! <%= button "Edit", to: Routes.event_path(@conn, :edit, @event.id), method: :get, class: "h-min w-min"  %>
+        You! <%= button "Edit", to: Routes.person_event_path(@conn, :edit, @event.id), method: :get, class: "h-min w-min"  %>
       <% else  %>
         <%= WhatWhereWhen.People.Person.name(p) %>
       <% end %>
-    <% %WhatWhereWhen.ThemeCamps.Camp{} = c -> %> <%= link c.name,  to: Routes.camp_path(@conn, :show, c.id) %>
-  <% end %>
+    <% %WhatWhereWhen.ThemeCamps.Camp{} = c -> %>
+      <%= if(@current_person && @current_person.camp && @current_person.camp.id  == c.id) do %>
+        Your Camp! <%= button "Edit Event", to: Routes.camp_event_path(@conn, :edit, @current_person.camp.id, @event.id), method: :get, class: "h-min w-min"  %>
+      <% else  %>
+        <%= link c.name,  to: Routes.camp_path(@conn, :show, c.id) %>
+      <% end %>
+    <% end %>
   </span>
 
   <p class="row-start-5 col-span-3 md:col-span-2 md:min-w-[40vw] md:max-w-[60vw]"><%= @event.description %></p>
