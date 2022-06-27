@@ -113,6 +113,8 @@
 
   <hr class="my-3"/>
 
+  <%= inputs_for f, :location, fn l -> %>
+
   <fieldset>
   <%= error_tag f, :location %>
   <%= label f, :location, "Alright sounds good. One last thing: Where is it gonna be?" %>
@@ -126,16 +128,17 @@
   <%= label f, :location_is_camp_false, "Somewhere else"  %>
   </div>
   <% end %>
-  <%= inputs_for f, :location, fn l -> %>
   <%= hidden_input l, :lat %>
   <%= hidden_input l, :lng %>
-  <% end %>
 
-
-
-  <div id="map" class={"min-h-[40vh] f hidden"}></div>
+  <div id="location_form" class="flex flex-col hidden">
+    <%= text_input l, :description, class: "flex-grow-0 mb-2", placeholder: "Type a description here and/or click a point below"  %>
+    <div id="map" class={"min-h-[40vh] flex flex-shrink-0"}></div>
+  </div>
   <script phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/map.js")}></script>
   </fieldset>
+  <% end %>
+
 
   <%= if @changeset.errors[:location] && @changeset.errors[:location] |> elem(1) |> Keyword.has_key?(:camp_location_not_set) do %>
   <%= hidden_input :location, "is_for_camp", value: @current_person.camp.id %>
@@ -187,9 +190,9 @@
     }
   });
 
+  var otherLocationContainer = byId("location_form")
   var mapContainer = byId("map");
   var rigMap = function () {
-    mapContainer.style.display = "flex";
     mountMap(mapContainer);
 
     var waitingForMap = setInterval(function () {
@@ -243,6 +246,10 @@
     });
 
     if (prompting_for_camp_location) {
+      var desc = byId("event_location_description");
+      desc.value = "<%= @current_person.camp && @current_person.camp.name %>";
+      desc.readOnly = true;
+      desc.style.color = "#888";
       map.setZoom(-1.5);
       <%# zoom in more to start - so we are (slightly) likelier to get a more accurate location if we are gonna reuse it %>
     }
@@ -251,14 +258,16 @@
     var location_is_else = byId("event_location_is_camp_false");
 
     location_is_else.addEventListener("change", function (event) {
+      otherLocationContainer.style.display = "flex";
       rigMap();
       mapContainer.scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
     location_is_camp.addEventListener("change", function (event) {
-      mapContainer.style.display = "none";
+      otherLocationContainer.style.display = "none";
     });
   } else {
+    otherLocationContainer.style.display = "flex";
     rigMap();
   }
 })();

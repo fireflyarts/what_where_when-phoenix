@@ -173,6 +173,23 @@ defmodule WhatWhereWhenWeb.EventController do
     )
   end
 
+  defp handle_location(cs, _location_is_not, _camp, %{"description" => description} = params)
+       when not is_map_key(params, "lat") do
+    cs
+    |> Event.new_location_changeset(%{location: %{type: :event, description: description}})
+  end
+
+  defp handle_location(cs, _location_is_not, _camp, %{
+         "lat" => lat,
+         "lng" => lng,
+         "description" => description
+       }) do
+    cs
+    |> Event.new_location_changeset(%{
+      location: %{type: :event, lat: lat, lng: lng, description: description}
+    })
+  end
+
   defp handle_location(cs, _location_is_not, _camp, %{"lat" => lat, "lng" => lng}) do
     cs
     |> Event.new_location_changeset(%{location: %{type: :event, lat: lat, lng: lng}})

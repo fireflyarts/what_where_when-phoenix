@@ -2,6 +2,7 @@ defmodule WhatWhereWhenWeb.EventView do
   use WhatWhereWhenWeb, :view
 
   alias WhatWhereWhen.Events
+  alias WhatWhereWhen.Events.Event
   alias WhatWhereWhenWeb.EventCategoryView
 
   def render("index.html", assigns) do
