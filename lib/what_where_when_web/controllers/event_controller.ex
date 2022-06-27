@@ -6,8 +6,6 @@ defmodule WhatWhereWhenWeb.EventController do
 
   import Ecto.Changeset
 
-  plug :action
-
   def index(conn, _) do
     events = Events.list_events()
 

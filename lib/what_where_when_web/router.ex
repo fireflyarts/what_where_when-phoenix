@@ -21,7 +21,6 @@ defmodule WhatWhereWhenWeb.Router do
 
   scope "/", WhatWhereWhenWeb do
     pipe_through [:browser, :redirect_if_person_is_authenticated]
-    post "/who/me", PersonSessionController, :new
   end
 
   scope "/", WhatWhereWhenWeb do
@@ -39,12 +38,13 @@ defmodule WhatWhereWhenWeb.Router do
 
     get "/api/auth", PersonSessionController, :create
     get "/who/me", PersonController, :show
+    post "/who/me", PersonSessionController, :new
+    delete "/who/me", PersonSessionController, :delete
 
     get "/what", EventCategoryController, :index
     get "/where", LocationController, :index
     get "/when", EventController, :index
     resources "/events", EventController, only: [:show]
-    delete "/who/me", PersonSessionController, :delete
   end
 
   scope "/who/me", WhatWhereWhenWeb do
