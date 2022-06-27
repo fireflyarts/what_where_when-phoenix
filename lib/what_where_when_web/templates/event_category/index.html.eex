@@ -1,8 +1,10 @@
 <h1 class="italic">What mysteries await...?</h1>
 
+<div class="alert alert-danger">This page isn't actually working yet</div>
+
 <div id="pill_pile" class="flex flex-wrap flex-row justify-center gap-2" >
 <%= for category <- Enum.sort_by(@categories, &{to_string(&1)})  do%>
-  <%= render "_pill.html", category: category %>
+  <%= render "_pill.html", event_category: category %>
 <% end %>
 <span class="min-w-[80%] text-center md:min-w-0 inline-block p-1 px-3 border-solid rounded-lg border-2 border-green-400 bg-green-300">+</span>
 </div>
