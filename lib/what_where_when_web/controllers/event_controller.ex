@@ -6,6 +6,8 @@ defmodule WhatWhereWhenWeb.EventController do
 
   import Ecto.Changeset
 
+  plug :action
+
   def index(conn, _) do
     events = Events.list_events()
 
@@ -29,16 +31,46 @@ defmodule WhatWhereWhenWeb.EventController do
     render(conn, "new.html", changeset: cs, categories: cats)
   end
 
-  def create(conn, %{"event" => event_params, "location" => location_params}) do
-    cs =
-      Event.changeset(%Event{}, event_params)
-      |> handle_owner(conn, event_params["owner_type"])
-      |> handle_date_and_maybe_time(Map.take(event_params, ~w[all_day start_date start_time]))
-      |> handle_location(
-        event_params["location_is_camp"],
-        conn.assigns.current_person.camp,
-        location_params
+  def edit(conn, %{"id" => id}) do
+    e = Events.get_event!(id)
+
+    if e.owning_person_id != conn.assigns.current_person.id do
+      Plug.Conn.put_status(conn, :unauthorized)
+    else
+      render(conn, "edit.html",
+        event: e,
+        changeset: Event.changeset(e, %{}),
+        categories: Events.list_categories()
       )
+    end
+  end
+
+  def update(conn, %{"id" => id, "event" => event_params}) do
+    e = Events.get_event!(id)
+
+    if e.owning_person_id != conn.assigns.current_person.id do
+      Plug.Conn.put_status(conn, :unauthorized)
+    else
+      cs = upsert(conn, e, event_params)
+
+      case WhatWhereWhen.Repo.update(cs) do
+        {:ok, event} ->
+          conn
+          |> put_flash(:info, "Event updated successfully.")
+          |> redirect(to: Routes.event_path(conn, :show, event))
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "edit.html",
+            event: e,
+            changeset: changeset,
+            categories: Events.list_categories()
+          )
+      end
+    end
+  end
+
+  def create(conn, %{"event" => event_params}) do
+    cs = upsert(conn, %Event{}, event_params)
 
     case WhatWhereWhen.Repo.insert(cs) do
       {:ok, event} ->
@@ -52,6 +84,17 @@ defmodule WhatWhereWhenWeb.EventController do
           categories: Events.list_categories()
         )
     end
+  end
+
+  defp upsert(conn, start, event_params) do
+    Event.changeset(start, event_params)
+    |> handle_owner(conn, event_params["owner_type"])
+    |> handle_date_and_maybe_time(Map.take(event_params, ~w[all_day start_date start_time]))
+    |> handle_location(
+      event_params["location_is_camp"],
+      conn.assigns.current_person.camp,
+      event_params["location"]
+    )
   end
 
   defp handle_owner(cs, _conn, nil) do

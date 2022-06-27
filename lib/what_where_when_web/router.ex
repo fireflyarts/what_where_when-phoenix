@@ -20,20 +20,8 @@ defmodule WhatWhereWhenWeb.Router do
   end
 
   scope "/", WhatWhereWhenWeb do
-    pipe_through :browser
-
-    get "/", PageController, :index
-    delete "/who/me", PersonSessionController, :delete
-    get "/api/auth", PersonSessionController, :create
-
-    get "/what", EventCategoryController, :index
-    get "/where", LocationController, :index
-    get "/when", EventController, :index
-  end
-
-  scope "/", WhatWhereWhenWeb do
     pipe_through [:browser, :redirect_if_person_is_authenticated]
-    get "/who/me", PersonSessionController, :new
+    post "/who/me", PersonSessionController, :new
   end
 
   scope "/", WhatWhereWhenWeb do
@@ -41,7 +29,28 @@ defmodule WhatWhereWhenWeb.Router do
 
     resources "/who/camps", CampController, only: [:show]
 
-    resources "/events", EventController, only: [:new, :create, :show]
+    resources "/events", EventController, only: [:new, :create]
+  end
+
+  scope "/", WhatWhereWhenWeb do
+    pipe_through :browser
+
+    get "/", PageController, :index
+
+    get "/api/auth", PersonSessionController, :create
+    get "/who/me", PersonController, :show
+
+    get "/what", EventCategoryController, :index
+    get "/where", LocationController, :index
+    get "/when", EventController, :index
+    resources "/events", EventController, only: [:show]
+    delete "/who/me", PersonSessionController, :delete
+  end
+
+  scope "/who/me", WhatWhereWhenWeb do
+    pipe_through [:browser, :require_authenticated_person]
+
+    resources "/events", EventController, only: [:edit, :update]
   end
 
   scope "/api", WhatWhereWhenWeb do

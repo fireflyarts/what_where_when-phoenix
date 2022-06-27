@@ -15,11 +15,8 @@
   </section>
   <section id="person-menu" class="py-4 md:flex-shrink">
     <ul class="flex-1 flex flex-col justify-center h-full">
-      <li><%= link "Log out", to: Routes.person_session_path(@conn, :delete), method: :delete %> </li>
       <li>
-
-        <%= @current_person.burn_name || @current_person.email %><%#, to:
-        Routes.person_settings_path(@conn, :edit) %>
+        <%= link @current_person.burn_name || @current_person.email, to: Routes.person_path(@conn, :show) %>
       </li>
       <%= if @current_person.camp do %>
      <li>
@@ -40,7 +37,7 @@
     </a>
   </section>
   <section id="person-menu" class="py-4">
-    <%= link "Log in", to: Routes.person_session_path(@conn, :new), class:
+    <%= link "Log in", to: Routes.person_session_path(@conn, :new), method: :post, class:
     "ring-2 p-3 bg-blue-400" %>
   </section>
 </header>

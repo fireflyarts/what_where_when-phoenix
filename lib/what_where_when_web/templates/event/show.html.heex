@@ -1,38 +1,65 @@
-<div class="max-w-xl">
-  <h1>We got it!</h1>
+<div class="inline-grid align-items-center justify-items-center md:mx-5 md:min-h-[60vh]">
+  <span class="inline-grid col-start-1 row-start-1 row-end-1 justify-self-start whitespace-nowrap">
+  <%= case @event.sober_friendly do %>
+  <%  :yes ->    %> ✅ Sobriety Friendly
+  <% :options -> %> ☑️ Sober Options
+  <% :no ->      %> ❌ NO SOBER OPTIONS
+  <% end %>
+  </span>
+  <span class="inline-grid col-end-4 md:col-end-4 row-start-1 justify-self-end whitespace-nowrap">
+  <%= case @event.minimum_age do %>
+  <% 0 -> %>
+  👪 All ages
+  <% n when n < 17 -> %> ⏳ Ages <%= n %> and up
+  <% n when n == 18 -> %> 🔞 Adults only!
+  <% n when n > 18 and n < 21 -> %> 🔞⏳ Adults <%= n %> and up
+  <% n when n == 21 ->  %> 🍷 Adults 21 and up
+  <% n when n > 21  -> %> 🧓 Adults <%= n %> and up
+  <% end %>
+  </span>
 
-  <p>You have succesfully submitted your event:</p>
+  <h1 class="grid row-start-2 col-start-1 col-span-2text-2xl font-semibold md:text-4xl justify-self-center"><%= @event.name %></h1>
+  <span class="self-center grid text-md row-start-2 col-start-3 md:row-start-3 md:col-start-auto md:col-end-3"></span>
+  <%= render_one(@event.category, EventCategoryView, "_pill.html", class: "self-center grid text-md row-start-2 col-start-3 md:col-start-2 h-fit w-fit") %>
 
-  <hr />
+  <span class="inline-grid row-start-3 col-start-1 justify-self-start whitespace-nowrap">
+  <strong>Date:</strong> <%= Timex.format!(@event.start_date, "{WDfull},
+  {Mfull} {D}") %></span>
+  <span class="inline-grid row-start-3 md:col-end-2 justify-self-end whitespace-nowrap"><strong>Time:</strong> <%= if @event.start_time, do:
+  Timex.format!(NaiveDateTime.to_time(@event.start_time), "{h12}:{m} {am}"),
+  else: "All Day"%>
+  </span>
 
-  <h2 class="text-xl"><%= @event.name %></h2>
+  <p class="row-start-4 col-span-3 md:col-span-2 md:min-w-[40vw] md:max-w-[60vw]"><%= @event.description %></p>
 
-  <p class="mb-6">
-    <strong>Date:</strong> <%= Timex.format!(@event.start_date, "{WDfull},
-    {Mfull} {D}") %> <br/><strong>Time:</strong> <%= if @event.start_time, do:
-    Timex.format!(NaiveDateTime.to_time(@event.start_time), "{h12}:{m} {am}"),
-    else: "All Day"%>
-  </p>
+  <div id="map" class="min-h-[40vh] min-w-[95vw] md:min-h-0 md:min-w-[40vw] md:max-w-[50vw] mt-4 grid row-start-5 md:row-start-2 col-span-3 md:col-span-1 md:row-span-4 ring-4"></div>
 
-  <h3 class="text-lg">Description</h3>
 
-  <p><%= @event.description %></p>
-
-  <p class="mt-4 italic text-s">We've also saved the other information you gave</p>
-  <hr class="mb-12" />
-
-  <div class="text-yellow-100">
-    <p>
-      Da<em>www</em>n is still finishing up the events browsing/seraching functions,<br/> but
-      when they're ready, this'll be in there! <br />(and you'll also be able to
-      tweak stuff at that time)
-    </p>
-    <br />
-    <p>
-      If you <em><strong>urgently!!</strong></em> need to remove it / changes something,<br/> please
-      <a class="underline" href="https://github.com/fireflyarts/what_where_when-phoenix/issues/new">file an issue on GitHub</a> with your full email address and the event name.
-    </p>
-  </div>
-
-  <p class="mt-6">See you in the woods!</p>
 </div>
+<script phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/map.js")}></script>
+  <script type="text/javascript">
+  (function() {
+    var lat = <%= @event.location.lat %>;
+    var lng = <%= @event.location.lng %>;
+    var emoji = "<%= @event.category.emoji.unicode %>";
+
+    var mapContainer = document.getElementById("map");
+    mountMap(mapContainer);
+
+    var waitingForMap = setInterval(function () {
+      if (window.map === undefined) {
+        return;
+      }
+
+      clearInterval(waitingForMap);
+
+      L.marker({lat: lat, lng: lng}, {
+          icon: L.divIcon({
+            html: '<span class="emoji-map-marker">' + emoji + "</span>",
+          })
+      }).addTo(map);
+
+      map.flyTo({lat: lat, lng: lng});
+    });
+  })();
+  </script>

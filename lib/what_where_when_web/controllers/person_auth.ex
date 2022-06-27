@@ -133,7 +133,7 @@ defmodule WhatWhereWhenWeb.PersonAuth do
     else
       conn
       |> maybe_store_return_to()
-      |> redirect(to: Routes.person_session_path(conn, :new))
+      |> redirect(to: Routes.person_session_path(conn, :new), method: :post)
       |> halt()
     end
   end

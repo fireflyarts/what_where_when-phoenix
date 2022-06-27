@@ -1,0 +1,11 @@
+<div id="calendar"></div>
+<script type="text/javascript">
+  document.addEventListener("FireflyReady", () => {
+    <%=if @events do %>
+    Firefly.EventsCalendar.withEvents(<%= raw(Events.as_json(@events, @action)) %>)
+    <% else %>
+    Firefly.EventsCalendar.async()
+    <% end %>
+      .render();
+  })
+</script>

@@ -1,31 +1,58 @@
 import "fullcalendar/main.css";
-import { Calendar, CalendarOptions, ViewOptionsRefined } from "@fullcalendar/core";
+import { Calendar, CalendarOptions, EventInput } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 
+export { EventInput };
+export interface FireflyEventsCalendar {
+  withEvents(events: EventInput[]): FireflyEventCalendar;
+  async(): FireflyEventCalendar;
+}
 
-class FireflyEventCalendar {
-  public fc: Calendar;
+class FireflyEventCalendar implements FireflyEventsCalendar {
+  private fc: Calendar;
 
-  constructor() {
+  static async() {
+    return (window.Firefly.EventsCalendar = new FireflyEventCalendar({
+      events: "/api/events",
+    }));
+  }
+
+  public async() {
+    this.fc.addEventSource("/api/events");
+    return this;
+  }
+
+  static withEvents(initialEvents: EventInput[]) {
+    return (window.Firefly.EventsCalendar = new FireflyEventCalendar({
+      initialEvents,
+    }));
+  }
+
+  public withEvents(eventsToAdd: EventInput[]) {
+    this.fc.addEvent(eventsToAdd);
+    return this;
+  }
+
+  public render() {
+    this.fc.render();
+  }
+
+  private constructor(inputOpts: CalendarOptions) {
     this.fc = new Calendar(this.mountPoint(), {
       ...this.viewOptions(),
       firstDay: window.Firefly.startDate.getDay(), // start on the correct day of the week
       initialDate: window.Firefly.startDate,
-      events: "/api/events"
-    } )
+      ...inputOpts,
+    });
   }
 
-  render() {
-    this.fc.render();
-  }
-
-  mountPoint() {
+  private mountPoint() {
     return document.getElementById("calendar")!;
   }
 
-  viewOptions(): CalendarOptions {
+  private viewOptions(): CalendarOptions {
     return {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
       views: {
@@ -37,28 +64,25 @@ class FireflyEventCalendar {
         gridByDay: {
           type: "timeGrid",
           dayCount: 6,
-          buttonText: "Grid"
+          buttonText: "Grid",
         },
         agenda: {
-         type: "list",
+          type: "list",
           dayCount: 5,
           buttonText: "Agenda",
-        }
+        },
       },
-      initialView: "listByDay",
+      initialView:
+        window.visualViewport && window.visualViewport.width > 500
+          ? "listByDay"
+          : "agenda",
       headerToolbar: {
-        start: '',
-        center: 'listByDay,gridByDay,listWeek',
-        end: ''
-      }
-
+        start: "",
+        center: "agenda,listByDay,gridByDay",
+        end: "",
+      },
     };
   }
-};
+}
 
 export default FireflyEventCalendar;
-
-document.addEventListener('DOMContentLoaded', () => {
-  window.Firefly.EventsCalendar = new FireflyEventCalendar();
-  window.Firefly.EventsCalendar.render();
-});
