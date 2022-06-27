@@ -33,6 +33,7 @@ defmodule WhatWhereWhen.MixProject do
       {:postgrex, "~> 0.16"},
 
       # Operations layer
+      {:sentry, "~> 8.0"},
 
       # testing
       {:floki, ">= 0.30.0", only: :test},
@@ -57,7 +58,7 @@ defmodule WhatWhereWhen.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["esbuild default --minify","tailwind default --minify", "phx.digest"]
+      "assets.deploy": ["esbuild default --minify", "tailwind default --minify", "phx.digest"]
     ]
   end
 

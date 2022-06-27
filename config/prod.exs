@@ -53,6 +53,16 @@ config :what_where_when, WhatWhereWhenWeb.Endpoint,
 
 # === "Externalities" layer ===
 
+config :sentry,
+  dsn: "https://b95a7d648c3e4eff914c31717614fcb8@o1300142.ingest.sentry.io/6534193",
+  environment_name: :prod,
+  enable_source_code_context: true,
+  root_source_code_path: File.cwd!(),
+  tags: %{
+    env: "production"
+  },
+  included_environments: [:prod]
+
 # === "VM layer" ===
 
 # Do not print debug messages in production
