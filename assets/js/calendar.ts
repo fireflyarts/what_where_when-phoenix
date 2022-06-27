@@ -73,9 +73,7 @@ class FireflyEventCalendar implements FireflyEventsCalendar {
         },
       },
       initialView:
-        window.visualViewport && window.visualViewport.width > 500
-          ? "listByDay"
-          : "agenda",
+        window.visualViewport && window.visualViewport.width > 500 ? "listByDay" : "agenda",
       headerToolbar: {
         start: "",
         center: "agenda,listByDay,gridByDay",
