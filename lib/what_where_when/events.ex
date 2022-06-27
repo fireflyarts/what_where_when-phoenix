@@ -8,6 +8,7 @@ defmodule WhatWhereWhen.Events do
 
   alias WhatWhereWhen.Events.Event
   alias WhatWhereWhen.Events.Category
+  alias WhatWhereWhen.People.Person
 
   def create_category(attrs \\ %{}) do
     %Category{}
@@ -32,6 +33,35 @@ defmodule WhatWhereWhen.Events do
     Repo.all(Event)
   end
 
+  def as_json(event_or_events, action \\ :show)
+
+  def as_json(events, action) when is_list(events) do
+    "[" <>
+      (events
+       |> Enum.map(&as_json(&1, action))
+       |> Enum.join(",")) <>
+      "]"
+  end
+
+  @doc """
+  Inject url param for given action into json encoding
+  ~lisp style for probably unnecessary performance (w/ Erlang/Elixir's cons-cell lists)
+  """
+  def as_json(%Event{id: id} = e, action)
+      when action == :show or action == :edit do
+    # remove the trailing },
+    [?} | first_part_reversed] = Jason.encode_to_iodata!(e) |> :lists.reverse()
+    first_part = :lists.reverse(first_part_reversed)
+
+    [
+      first_part,
+      ~c[,"url": "],
+      WhatWhereWhenWeb.Router.Helpers.event_path(WhatWhereWhenWeb.Endpoint, action, id),
+      ?",
+      ?}
+    ]
+  end
+
   @doc """
   Gets a single event.
 
@@ -46,7 +76,17 @@ defmodule WhatWhereWhen.Events do
       ** (Ecto.NoResultsError)
 
   """
-  def get_event!(id), do: Repo.get!(Event, id)
+  def get_event!(id),
+    do:
+      Repo.get!(Event, id)
+      |> Repo.preload(:location)
+      |> Repo.preload(:category)
+      |> Repo.preload(:owning_person)
+      |> Repo.preload(:owning_camp)
+
+  def get_owned_by_person!(%Person{id: person_id}) do
+    Repo.all(from e in Event, where: e.owning_person_id == ^person_id)
+  end
 
   @doc """
   Creates a event.

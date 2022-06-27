@@ -8,11 +8,6 @@ defmodule WhatWhereWhenWeb.PersonSessionControllerTest do
   end
 
   describe "GET /who/me" do
-    test "redirects if already logged in", %{conn: conn, person: person} do
-      conn = conn |> log_in_person(person) |> get(Routes.person_session_path(conn, :new))
-      assert redirected_to(conn) == "/"
-    end
-
     test "logs the person in", %{conn: conn, person: person} do
       conn =
         get(conn, Routes.person_session_path(conn, :create), %{

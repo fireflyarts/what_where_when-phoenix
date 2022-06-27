@@ -1,0 +1,19 @@
+
+<div class="flex flex-row justify-between items-baseline">
+<h1 class=""><%= WhatWhereWhen.People.Person.name(@current_person) %></h1>
+
+<%= link "Log out", to: Routes.person_session_path(@conn, :delete), method: :delete %>
+</div>
+
+<hr class="mb-2" />
+
+<h2>Events You're Hosting</h2>
+
+<%= render(EventView, "_calendar.html", events: @events, action: :edit ) %>
+
+
+
+<%# <hr />
+<h2>Change password</h2> %>
+
+

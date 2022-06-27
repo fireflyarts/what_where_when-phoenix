@@ -24,7 +24,7 @@ defmodule WhatWhereWhen.Events.Event do
     belongs_to :owning_person, Person
     belongs_to :owning_camp, Camp
 
-    belongs_to :location, Location
+    belongs_to :location, Location, on_replace: :update
 
     timestamps()
   end
@@ -109,7 +109,7 @@ defmodule WhatWhereWhen.Events.Event do
     event_age = get_field(cs, :minimum_age)
     category = get_field(cs, :category)
 
-    if event_age < category.id do
+    if event_age < category.minimum_age do
       add_category_minimum_age_error(cs, category)
     else
       cs
