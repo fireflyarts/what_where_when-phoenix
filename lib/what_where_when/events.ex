@@ -9,6 +9,7 @@ defmodule WhatWhereWhen.Events do
   alias WhatWhereWhen.Events.Event
   alias WhatWhereWhen.Events.Category
   alias WhatWhereWhen.People.Person
+  alias WhatWhereWhen.ThemeCamps.Camp
 
   def create_category(attrs \\ %{}) do
     %Category{}
@@ -86,6 +87,10 @@ defmodule WhatWhereWhen.Events do
 
   def get_owned_by_person!(%Person{id: person_id}) do
     Repo.all(from e in Event, where: e.owning_person_id == ^person_id)
+  end
+
+  def get_owned_by_camp!(%Camp{id: camp_id}) do
+    Repo.all(from e in Event, where: e.owning_camp_id == ^camp_id)
   end
 
   @doc """

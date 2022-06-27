@@ -29,6 +29,14 @@ defmodule WhatWhereWhen.Events.Event do
     timestamps()
   end
 
+  def owner(%__MODULE__{owning_person_id: p}) when p != nil do
+    WhatWhereWhen.People.get_person!(p)
+  end
+
+  def owner(%__MODULE__{owning_camp_id: c}) when c != nil do
+    WhatWhereWhen.ThemeCamps.get_camp!(c)
+  end
+
   @doc false
   def changeset(event, attrs) do
     cs =

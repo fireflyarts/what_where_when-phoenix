@@ -48,6 +48,7 @@ h2 {
   @apply text-lg my-2;
 }
 
+button,
 [type="button"],
 [type="submit"] {
   @apply my-4 ring-2 p-2 bg-blue-400;

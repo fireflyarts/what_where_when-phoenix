@@ -22,21 +22,33 @@
   <span class="self-center grid text-md row-start-2 col-start-3 md:row-start-3 md:col-start-auto md:col-end-3"></span>
   <%= render_one(@event.category, EventCategoryView, "_pill.html", class: "self-center grid text-md row-start-2 col-start-3 md:col-start-2 h-fit w-fit") %>
 
-  <span class="inline-grid row-start-3 col-start-1 justify-self-start whitespace-nowrap">
+  <span class="inline-grid row-start-3 justify-self-start whitespace-nowrap">
   <strong>Date:</strong> <%= Timex.format!(@event.start_date, "{WDfull},
   {Mfull} {D}") %></span>
-  <span class="inline-grid row-start-3 md:col-end-2 justify-self-end whitespace-nowrap"><strong>Time:</strong> <%= if @event.start_time, do:
+  <span class="inline-grid row-start-4 md:col-end-2 col-start-1 justify-self-start whitespace-nowrap"><strong>Time:</strong> <%= if @event.start_time, do:
   Timex.format!(NaiveDateTime.to_time(@event.start_time), "{h12}:{m} {am}"),
   else: "All Day"%>
   </span>
+  <span class="inline-grid row-start-3 col-end-4 md:col-end-3 justify-self-end md:justify-self-center">
+  <strong>Hosted by:</strong> <%= case Event.owner(@event) do %>
+    <% %WhatWhereWhen.People.Person{} = p -> %>
+      <%= if(@current_person && @current_person.id == p.id) do %>
+        You! <%= button "Edit", to: Routes.event_path(@conn, :edit, @event.id), method: :get, class: "h-min w-min"  %>
+      <% else  %>
+        <%= WhatWhereWhen.People.Person.name(p) %>
+      <% end %>
+    <% %WhatWhereWhen.ThemeCamps.Camp{} = c -> %> <%= link c.name,  to: Routes.camp_path(@conn, :show, c.id) %>
+  <% end %>
+  </span>
 
-  <p class="row-start-4 col-span-3 md:col-span-2 md:min-w-[40vw] md:max-w-[60vw]"><%= @event.description %></p>
+  <p class="row-start-5 col-span-3 md:col-span-2 md:min-w-[40vw] md:max-w-[60vw]"><%= @event.description %></p>
 
-  <div id="map" class="min-h-[40vh] min-w-[95vw] md:min-h-0 md:min-w-[40vw] md:max-w-[50vw] mt-4 grid row-start-5 md:row-start-2 col-span-3 md:col-span-1 md:row-span-4 ring-4"></div>
-
-
-</div>
-<script phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/map.js")}></script>
+  <%= if @event.location.description do %>
+  <p class="mt-4 row-start-6 col-span-3 md:col-span-2 justify-self-start md:min-w-[40vw] md:max-w-[60vw]"><strong>Located at:</strong> <%= @event.location.description %></p>
+  <% end %>
+  <%= if @event.location.lat do %>
+  <div id="map" class="min-h-[40vh] min-w-[95vw] md:min-h-0 md:min-w-[40vw] md:max-w-[50vw] mt-4 grid row-start-7 md:row-start-2 col-span-3 md:col-span-1 md:row-span-5 ring-4"></div>
+  <script phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/map.js")}></script>
   <script type="text/javascript">
   (function() {
     var lat = <%= @event.location.lat %>;
@@ -63,3 +75,7 @@
     });
   })();
   </script>
+
+  <% end %>
+
+</div>

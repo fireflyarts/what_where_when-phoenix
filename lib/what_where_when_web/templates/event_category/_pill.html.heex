@@ -1,9 +1,9 @@
 <% border_color = "red-600" %>
 <% background_color = "red-400" %>
 <% class = assigns[:class] || "" %>
-<button class={"text-center md:text-left p-1 border-solid rounded-lg border-2 border-#{border_color} bg-#{background_color} #{class}"}>
+<span class={"text-center md:text-left p-1 border-solid rounded-lg border-2 border-#{border_color} bg-#{background_color} #{class}"}>
 
 <%= @event_category.emoji.unicode %>
 <%= to_string(@event_category) %>
 
-</button>
+</span>

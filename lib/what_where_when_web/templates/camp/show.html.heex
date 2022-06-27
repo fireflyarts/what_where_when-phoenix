@@ -1,12 +1,7 @@
 <h1><%= @camp.name %></h1>
 
 
-<h3>Campers</h3>
+<h2>Events They're Hosting</h2>
 
-<ul>
-<%= for member <- @camp.members do %>
-<li><%= WhatWhereWhen.People.Person.name(member) %></li>
-<% end %>
-
-</ul>
+<%= render(EventView, "_calendar.html", events: @events, action: :show ) %>
 

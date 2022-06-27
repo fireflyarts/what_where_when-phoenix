@@ -7,12 +7,22 @@ defmodule WhatWhereWhen.Locations.Location do
 
     field :lat, :decimal
     field :lng, :decimal
+    field :description, :string
   end
 
   @doc false
   def changeset(location, attrs) do
-    location
-    |> cast(attrs, [:type, :lat, :lng])
-    |> validate_required([:type, :lat, :lng])
+    cs =
+      location
+      |> cast(attrs, [:type, :lat, :lng, :description])
+      |> validate_required([:type])
+
+    case get_field(cs, :description) do
+      x when x == "" or is_nil(x) ->
+        cs |> validate_required([:lat, :lng])
+
+      _ ->
+        cs
+    end
   end
 end

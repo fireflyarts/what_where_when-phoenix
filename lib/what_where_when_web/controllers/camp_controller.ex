@@ -1,6 +1,7 @@
 defmodule WhatWhereWhenWeb.CampController do
   use WhatWhereWhenWeb, :controller
 
+  alias WhatWhereWhen.Events
   alias WhatWhereWhen.ThemeCamps
 
   def index(conn, _params) do
@@ -10,7 +11,8 @@ defmodule WhatWhereWhenWeb.CampController do
 
   def show(conn, %{"id" => id}) do
     camp = ThemeCamps.get_camp_with_members!(id)
-    render(conn, "show.html", camp: camp)
+    events = Events.get_owned_by_camp!(camp)
+    render(conn, "show.html", camp: camp, events: events)
   end
 
   def edit(conn, %{"id" => id}) do
