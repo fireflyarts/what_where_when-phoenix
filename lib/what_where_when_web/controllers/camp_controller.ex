@@ -13,9 +13,9 @@ defmodule WhatWhereWhenWeb.CampController do
     camp = ThemeCamps.get_camp!(id)
     events = Events.get_owned_by_camp!(camp)
 
-    if conn.assigns.current_person.camp && conn.assigns.current_person.camp.id == camp.id do
-      true
-    end
+    # if conn.assigns.current_person, conn.assigns.current_person.camp && conn.assigns.current_person.camp.id == camp.id do
+    #   true
+    # end
 
     render(conn, "show.html", camp: camp, events: events)
   end
