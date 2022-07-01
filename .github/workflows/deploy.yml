@@ -1,0 +1,66 @@
+name: Deploy to prod
+
+on:
+  workflow_dispatch:
+
+
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment: Prod
+
+    env:
+      MIX_ENV: prod
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Elixir
+        uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
+        with:
+          elixir-version: "1.13.4" # Define the elixir version [required]
+          otp-version: "25.0.1" # Define the OTP version [required]
+      - name: Restore elixir dependencies and build cache
+        uses: actions/cache@v3
+        with:
+          path: |
+           deps
+           _build
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+      - name: Install elixir dependencies
+        run: mix deps.get && mix esbuild.install && mix tailwind.install
+
+      - name: Restore node dependencies cache
+        uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: assets/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install javascript dependencies
+        run: cd assets && npm install
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      - name: Build assets
+        run: mix assets.deploy && git add -f priv/static && git commit -m "assets for $(git rev-parse HEAD)"
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.1
+
+      - uses: mhanberg/gigalixir-action@v0.6.1
+        continue-on-error: true
+        with:
+          GIGALIXIR_APP: ${{ secrets.GIGALIXIR_PROJECT_NAME }}
+          GIGALIXIR_USERNAME: ${{ secrets.GIGALIXIR_USERNAME }}
+          GIGALIXIR_PASSWORD: ${{ secrets.GIGALIXIR_PASSWORD }}
+          MIGRATIONS: false  # defaults to true
+          SSH_PRIVATE_KEY: ${{ secrets.GIGALIXIR_SSH }}
