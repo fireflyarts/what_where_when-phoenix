@@ -2,18 +2,12 @@
   class="sm:inline-grid sm:grid-flow-row sm:grid-cols-2 sm:items-center sm:place-items-center sm:gap-x-3 xl:gap-x-36 sm:mx-3">
   <h1 class="sm:col-span-2 sm:text-center">Welcome!</h1>
 
-  <p class="sm:col-span-2 alert alert-warning" role="alert">
-    <span class="text-xl">it's not done (but more than it was)</span><br />
-    This guide is currently open for <%= link "submissions", to: Routes.event_path(@conn, :new), class: "underline" %>,
-    and <a href="/when" class="underline">basic browsing</a>. <br class="mb-2" />
-
-    <span class="text-xs">
-      There is more to come & I'll remove this when I think it's final form (for 2022)<br />
-      If you'd like to follow along with changes or <a class="underline" href="https://github.com/fireflyarts/what_where_when-phoenix/issues/new/choose">submit issues</a>, the repo is on GitHub <a class="underline" href="https://github.com/fireflyarts/what_where_when-phoenix">here</a>
-    </span>
+  <p class="sm:col-span-2 alert alert-info" role="alert">
+    <span class="text-xl">Well, we're in the woods now</span><br />
+    I updated this from my iPad once, but (hopefully) I'm not actually "finishing" it this week. sorry 
   </p>
 
-  <p>Please select "What?", "Where?", or "When?" above to find events.</p>
+  <p>Please select <span class="line-through">"What?", "Where?", or</span> "When?" above to find events.</p>
 
   <img class="my-2 object-cover object-top max-h-[25vh] min-w-full
   sm:object-scale-down sm:min-w-0 sm:max-h-72 sm:max-w-2/3 sm:float-left"
