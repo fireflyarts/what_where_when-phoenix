@@ -46,4 +46,16 @@ jobs:
       - name: Install javascript dependencies
         run: cd assets && npm install
       - name: Build assets
-        run: mix assets.deploy
+        run: mix assets.deploy && git add -f priv/static && git commit -m "assets for $(git rev-parse HEAD)"
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.1
+
+      - uses: mhanberg/gigalixir-action@v0.6.1
+        with:
+          GIGALIXIR_APP: ${{ secrets.GIGALIXIR_PROJECT_NAME }}
+          GIGALIXIR_USERNAME: ${{ secrets.GIGALIXIR_USERNAME }}
+          GIGALIXIR_PASSWORD: ${{ secrets.GIGALIXIR_PASSWORD }}
+          MIGRATIONS: false  # defaults to true
+          SSH_PRIVATE_KEY: ${{ secrets.GIGALIXIR_SSH }}
