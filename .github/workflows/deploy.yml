@@ -44,6 +44,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Install javascript dependencies
-        run: (cd assets && npm install
+        run: cd assets && npm install
       - name: Build assets
         run: mix assets.deploy
