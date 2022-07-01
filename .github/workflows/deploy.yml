@@ -56,7 +56,7 @@ jobs:
         with:
           python-version: 3.8.1
 
-      - uses: mhanberg/gigalixir-action@v0.6.1
+      - uses: mhanberg/gigalixir-action@v0.6.2
         continue-on-error: true
         with:
           GIGALIXIR_APP: ${{ secrets.GIGALIXIR_PROJECT_NAME }}
