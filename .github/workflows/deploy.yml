@@ -1,9 +1,8 @@
 name: Deploy to prod
 
 on:
-  push:
-    branches:
-      - ci-deploy
+  workflow_dispatch:
+
 
 
 permissions:
@@ -58,6 +57,7 @@ jobs:
           python-version: 3.8.1
 
       - uses: mhanberg/gigalixir-action@v0.6.1
+        continue-on-error: true
         with:
           GIGALIXIR_APP: ${{ secrets.GIGALIXIR_PROJECT_NAME }}
           GIGALIXIR_USERNAME: ${{ secrets.GIGALIXIR_USERNAME }}
