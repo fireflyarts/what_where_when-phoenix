@@ -45,6 +45,10 @@ jobs:
             ${{ runner.os }}-node-
       - name: Install javascript dependencies
         run: cd assets && npm install
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
       - name: Build assets
         run: mix assets.deploy && git add -f priv/static && git commit -m "assets for $(git rev-parse HEAD)"
 
