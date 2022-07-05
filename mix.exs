@@ -38,6 +38,7 @@ defmodule WhatWhereWhen.MixProject do
 
       # testing
       {:floki, ">= 0.30.0", only: :test},
+      {:excoveralls, "~> 0.10", only: :test},
 
       # monitoring
       {:phoenix_live_dashboard, "~> 0.6", runtime: Mix.env() == :dev},
@@ -75,7 +76,14 @@ defmodule WhatWhereWhen.MixProject do
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 

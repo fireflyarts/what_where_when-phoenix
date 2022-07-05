@@ -16,7 +16,7 @@ defmodule WhatWhereWhenWeb.PersonSessionController do
   def create(conn, params) do
     with :prod <- Mix.env(),
          auth <- Util.TicketingAuth.inbound_params(params),
-         true <- auth[:signature_valid] && abs(auth[:delta]) < 60 do
+         true <- auth[:signature_valid] && abs(auth[:delta_seconds]) < 60 do
       payload = auth[:payload]
 
       case People.get_person_by_email(payload.email) do

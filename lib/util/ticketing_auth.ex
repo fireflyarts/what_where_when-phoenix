@@ -46,7 +46,7 @@ defmodule Util.TicketingAuth do
     |> then(
       &Map.put(
         &1,
-        :delta,
+        :delta_seconds,
         Timex.diff(Timex.from_unix(&1[:payload].timestamp), Timex.now(), :seconds)
       )
     )
