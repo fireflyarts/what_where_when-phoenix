@@ -1,4 +1,5 @@
-# WhatWhereWhen
+# WhatWhereWhen 
+[![Coverage Status](https://coveralls.io/repos/github/fireflyarts/what_where_when-phoenix/badge.svg?branch=canon)](https://coveralls.io/github/fireflyarts/what_where_when-phoenix?branch=canon)
 
 To start your Phoenix server:
 
