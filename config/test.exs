@@ -44,6 +44,8 @@ config :what_where_when, WhatWhereWhen.Repo,
 
 # === "Externalities" layer ===
 
+config :junit_formatter, include_filename?: true
+
 # In test we don't send emails.
 config :what_where_when, WhatWhereWhen.Mailer, adapter: Swoosh.Adapters.Test
 

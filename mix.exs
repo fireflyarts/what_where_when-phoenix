@@ -39,6 +39,7 @@ defmodule WhatWhereWhen.MixProject do
       # testing
       {:floki, ">= 0.30.0", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
+      {:junit_formatter, "~> 3.3", only: :test},
 
       # monitoring
       {:phoenix_live_dashboard, "~> 0.6", runtime: Mix.env() == :dev},
