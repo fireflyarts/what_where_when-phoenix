@@ -8,7 +8,7 @@
   "dependencies": {
     "@fullcalendar/core": "^5.11.2",
     "@fullcalendar/daygrid": "^5.11.2",
-    "@fullcalendar/list": "^5.11.2",
+    "@fullcalendar/list": "^5.11.3",
     "@fullcalendar/timegrid": "^5.11.2",
     "fullcalendar": "^5.11.2",
     "leaflet": "^1.8.0",
