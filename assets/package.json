@@ -10,7 +10,7 @@
     "@fullcalendar/daygrid": "^5.11.2",
     "@fullcalendar/list": "^5.11.2",
     "@fullcalendar/timegrid": "^5.11.2",
-    "fullcalendar": "^5.11.2",
+    "fullcalendar": "^5.11.3",
     "leaflet": "^1.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
